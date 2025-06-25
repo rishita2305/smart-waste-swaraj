@@ -1,0 +1,60 @@
+/* src/app/about/about.module.css */
+
+.aboutContainer {
+  padding: 4rem 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: var(--color-surface); /* Use theme variable for card/section background */
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  color: var(--color-text-body); /* Default text color */
+}
+
+.aboutTitle {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--color-primary-dark); /* Use theme variable */
+  margin-bottom: 1.5rem;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.aboutText {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  color: var(--color-text-body); /* Use theme variable */
+  transition: color 0.3s ease;
+}
+
+/* Dark Mode Specific Styles for About Page */
+[data-theme='dark'] .aboutContainer {
+  background-color: var(--color-surface); /* Dark surface */
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--color-border);
+}
+
+[data-theme='dark'] .aboutTitle {
+  color: var(--color-dark); /* Lighter text */
+}
+
+[data-theme='dark'] .aboutText {
+  color: var(--color-text-body); /* Lighter body text */
+}
+
+@media (max-width: 768px) {
+  .aboutContainer {
+    padding: 3rem 1rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+  .aboutTitle {
+    font-size: 2.2rem;
+  }
+  .aboutText {
+    font-size: 1rem;
+  }
+}

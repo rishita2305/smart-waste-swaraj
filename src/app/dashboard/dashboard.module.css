@@ -1,0 +1,351 @@
+/* src/app/dashboard/dashboard.module.css */
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  flex-direction: column;
+  min-height: calc(100vh - 80px); /* Fill remaining space below navbar */
+  background-color: var(--color-light); /* Consistent background */
+}
+
+.loadingSpinner {
+  animation: spin 1s linear infinite; /* Defined in globals.css */
+  height: 3rem; /* Larger spinner */
+  width: 3rem; /* Larger spinner */
+  color: var(--color-primary);
+}
+
+.loadingText {
+  margin-top: 1.5rem;
+  font-size: 1.25rem; /* text-lg */
+  color: var(--color-text-body);
+}
+
+.dashboardContainer {
+  width: 100%;
+  max-width: 1024px; /* Slightly wider dashboard */
+  margin: 2rem auto; /* mx-auto p-6 */
+  padding: 2rem;
+  background-color: white; /* bg-light */
+  border-radius: var(--border-radius); /* rounded-lg */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08), 0 5px 15px rgba(0, 0, 0, 0.04); /* Stronger, modern shadow */
+  border: 1px solid #e9ecef;
+}
+
+.welcomeTitle {
+  font-size: 2.5rem; /* text-4xl */
+  font-weight: 700; /* More bold */
+  color: var(--color-dark);
+  text-align: center;
+  margin-bottom: 2.5rem;
+  background: linear-gradient(to right, var(--color-primary), var(--color-secondary)); /* Gradient text */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr; /* Default to single column */
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.dashboardCard {
+  padding: 1.8rem; /* More padding */
+  border-radius: var(--border-radius); /* rounded-lg */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Slightly deeper shadow */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /* Add transition */
+}
+
+.dashboardCard:hover {
+  transform: translateY(-5px); /* Lift effect on hover */
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+}
+
+.cardTitle {
+  font-size: 1.3rem; /* text-xl */
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+  opacity: 0.9;
+}
+
+.cardValue {
+  font-size: 2.2rem; /* text-3xl */
+  font-weight: bold;
+}
+
+.cardIcon {
+  font-size: 3.5rem; /* text-5xl */
+  opacity: 0.6; /* Slightly more opaque */
+}
+
+.cardBgBlue {
+  background-color: var(--color-secondary); /* bg-blue-500 */
+}
+
+.cardBgOrange {
+  background-color: var(--status-pending); /* bg-orange-500 */
+}
+
+.cardBgGreen {
+  background-color: var(--status-completed); /* bg-green-500 */
+}
+
+.listingsSectionTitle {
+  font-size: 2rem; /* text-2xl */
+  font-weight: 700;
+  color: var(--color-dark);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--color-primary); /* Thicker, colored border */
+  text-align: left; /* Align title left */
+}
+
+.listingsGrid {
+  display: grid;
+  grid-template-columns: 1fr; /* Default to single column */
+  gap: 1.5rem; /* Increased gap */
+}
+
+.listingCard {
+  background-color: white;
+  padding: 1.5rem; /* More padding */
+  border-radius: var(--border-radius); /* rounded-lg */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08); /* shadow-md */
+  border: 1px solid #e0e7f1; /* lighter border */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.listingCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.listingTitle {
+  font-size: 1.25rem; /* text-lg */
+  font-weight: 700;
+  color: var(--color-dark);
+  margin-bottom: 0.75rem;
+}
+
+.listingStatusText {
+  font-size: 0.95rem; /* text-sm */
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.listingStatus {
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  display: inline-block; /* Allow padding and background */
+}
+
+.statusPending {
+  color: #856404; /* Darker yellow text for contrast */
+  background-color: #fff3cd; /* Light yellow background */
+  border: 1px solid #ffeeba;
+}
+
+.statusAssigned {
+  color: #0c5460; /* Darker cyan text */
+  background-color: #d1ecf1; /* Light cyan background */
+  border: 1px solid #bee5eb;
+}
+
+.statusCompleted {
+  color: #155724; /* Darker green text */
+  background-color: #d4edda; /* Light green background */
+  border: 1px solid #c3e6cb;
+}
+
+.listingDetail {
+  font-size: 0.9rem; /* text-sm */
+  color: var(--color-text-body);
+  margin-bottom: 0.4rem;
+}
+
+.listingDescription {
+  font-size: 0.85rem; /* text-xs */
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+  /* Keep current ellipsis for brevity on cards, consider expanding on detail page */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listingActions {
+  margin-top: auto; /* Pushes actions to the bottom */
+  padding-top: 1rem;
+  border-top: 1px dashed #e9ecef; /* Dashed border for softer separation */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.viewMapButton {
+  color: var(--color-secondary);
+  text-decoration: none;
+  font-size: 0.9rem; /* text-sm */
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color var(--transition-speed) ease, text-decoration var(--transition-speed) ease;
+  font-weight: 600;
+}
+
+.viewMapButton:hover {
+  color: var(--color-secondary-dark);
+  text-decoration: underline;
+}
+
+.buttonIcon {
+  margin-right: 0.35rem; /* Adjust spacing */
+  display: inline-block;
+  font-size: 1rem;
+}
+
+.collectorActions {
+  display: flex;
+  gap: 0.75rem; /* Increased gap */
+}
+
+.actionButtonAssign,
+.actionButtonComplete {
+  padding: 0.5rem 1rem; /* More generous padding */
+  border-radius: var(--border-radius);
+  font-size: 0.85rem; /* Slightly larger text */
+  font-weight: 600;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-speed) ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.actionButtonAssign {
+  background-color: var(--status-assigned);
+}
+
+.actionButtonAssign:hover {
+  background-color: #0b7e93; /* Darker shade */
+  transform: translateY(-1px);
+}
+
+.actionButtonComplete {
+  background-color: var(--status-completed);
+}
+
+.actionButtonComplete:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.listWasteAction {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.listWasteButton {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 1.2rem 2.5rem; /* Larger button */
+  border-radius: 50px; /* Pill shape */
+  font-size: 1.35rem; /* text-xl */
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-speed) ease, transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 15px rgba(40, 167, 69, 0.2);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.listWasteButton:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+}
+
+.noListingsMessage {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+  padding: 2rem;
+  background-color: #f0f0f0;
+  border-radius: var(--border-radius);
+  border: 1px dashed #ced4da;
+  grid-column: 1 / -1; /* Span across all columns in grid */
+}
+
+/* Media Queries */
+@media (min-width: 640px) { /* sm breakpoint */
+  .listingsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) { /* md breakpoint */
+  .statsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) { /* lg breakpoint */
+  .listingsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .welcomeTitle {
+    font-size: 2rem;
+  }
+  .dashboardCard {
+    padding: 1.5rem;
+  }
+  .cardTitle {
+    font-size: 1.1rem;
+  }
+  .cardValue {
+    font-size: 1.8rem;
+  }
+  .cardIcon {
+    font-size: 3rem;
+  }
+  .listingsSectionTitle {
+    font-size: 1.7rem;
+  }
+  .listingCard {
+    padding: 1.2rem;
+  }
+  .listingTitle {
+    font-size: 1.1rem;
+  }
+  .actionButtonAssign, .actionButtonComplete {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  .listWasteButton {
+    padding: 1rem 1.8rem;
+    font-size: 1.1rem;
+  }
+}

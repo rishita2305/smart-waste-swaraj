@@ -1,0 +1,158 @@
+/* src/app/auth/login/login.module.css */
+
+.loginPageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px); /* Adjust based on Navbar height */
+  padding: 2rem 1rem;
+  background: linear-gradient(to bottom right, var(--color-light), #e0e7f1); /* Subtle gradient background */
+}
+
+.loginCard {
+  background-color: white;
+  padding: 3rem 2.5rem;
+  border-radius: 12px; /* More rounded corners */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.05); /* Deeper shadow */
+  text-align: center;
+  width: 100%;
+  max-width: 450px;
+  border: 1px solid #e9ecef;
+}
+
+.cardTitle {
+  font-size: 2.5rem; /* Larger title */
+  font-weight: bold;
+  color: var(--color-primary);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.025em; /* Slight letter spacing */
+}
+
+.cardSubtitle {
+  font-size: 1.15rem;
+  color: var(--color-text-muted);
+  margin-bottom: 2rem;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem; /* Increased gap */
+}
+
+.inputGroup {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 1rem;
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+}
+
+.inputField {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem; /* Adjust padding for icon */
+  border: 1px solid #ced4da;
+  border-radius: 8px; /* Consistent border radius */
+  font-size: 1rem;
+  transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+  outline: none; /* Remove default outline */
+}
+
+.inputField:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25); /* Primary color glow on focus */
+}
+
+.errorMessage {
+  color: var(--status-error); /* Red for errors */
+  font-size: 0.9rem;
+  margin-top: -0.5rem; /* Pull closer to input */
+  text-align: left;
+}
+
+.submitButton {
+  background-color: var(--color-secondary);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1.15rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-speed) ease, transform 0.2s ease, box-shadow var(--transition-speed) ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2); /* Shadow with button color */
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--color-secondary-dark); /* Darker blue */
+  transform: translateY(-2px); /* Lift effect */
+  box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
+}
+
+.submitButton:disabled {
+  background-color: #a0a0a0;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.loadingSpinner {
+  animation: spin 1s linear infinite; /* from globals.css */
+  font-size: 1.15rem;
+}
+
+.buttonIcon {
+  font-size: 1.15rem;
+}
+
+.signupPrompt {
+  margin-top: 2rem;
+  color: var(--color-text-body);
+  font-size: 1rem;
+}
+
+.signupLink {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition-speed) ease, text-decoration var(--transition-speed) ease;
+}
+
+.signupLink:hover {
+  color: var(--color-primary-dark); /* Darker green */
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .loginCard {
+    padding: 2rem 1.5rem;
+    margin: 1rem; /* Smaller margin on very small screens */
+  }
+  .cardTitle {
+    font-size: 2rem;
+  }
+  .cardSubtitle {
+    font-size: 1rem;
+  }
+  .submitButton {
+    font-size: 1rem;
+    padding: 0.8rem 1rem;
+  }
+  .inputField {
+    padding: 0.8rem 0.8rem 0.8rem 2.5rem;
+  }
+  .inputIcon {
+    left: 0.8rem;
+    font-size: 1rem;
+  }
+}

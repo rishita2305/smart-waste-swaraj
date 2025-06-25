@@ -1,0 +1,205 @@
+/* src/app/globals.css (or a dedicated CSS file if you structure it that way) */
+
+:root {
+  /* Basic Colors */
+  --color-primary: #4CAF50; /* Green */
+  --color-primary-dark: #45a049;
+  --color-secondary: #007bff; /* Blue */
+  --color-secondary-dark: #0056b3;
+  --color-tertiary: #6c757d; /* Gray */
+  --color-light: #f8f9fa;
+  --color-dark: #343a40;
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* Status Colors (matching map markers) */
+  --status-pending: #ffc107; /* Orange */
+  --status-pending-bg: #fffbe6;
+  --status-assigned: #007bff; /* Blue */
+  --status-assigned-bg: #e6f2ff;
+  --status-completed: #28a745; /* Green */
+  --status-completed-bg: #e6ffe6;
+
+  /* Text Colors */
+  --color-text-primary: #333;
+  --color-text-secondary: #666;
+  --color-error: #dc3545; /* Red */
+  --color-success: #28a745;
+}
+
+
+/* General Body and Container Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-light);
+  color: var(--color-text-primary);
+}
+
+.list-waste-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: var(--color-white);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.list-waste-title {
+  text-align: center;
+  color: var(--color-primary);
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: var(--color-text-primary);
+}
+
+.form-input,
+.form-textarea {
+  width: calc(100% - 20px); /* Account for padding */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box; /* Include padding in width */
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: var(--color-tertiary);
+  color: var(--color-white);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--color-dark);
+  transform: translateY(-1px);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.mt-6 {
+  margin-top: 24px; /* Adjust as needed */
+}
+
+/* Location Info Box */
+.location-info-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  background-color: #e9f7ef; /* Light green background */
+  border: 1px solid var(--color-primary);
+  border-radius: 5px;
+  color: var(--color-primary-dark);
+  font-size: 0.95rem;
+}
+
+.location-info-box svg {
+  color: var(--color-primary);
+  font-size: 1.2rem;
+}
+
+.location-clear-btn {
+  background: none;
+  border: none;
+  color: var(--color-error);
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto; /* Pushes button to the right */
+  padding: 5px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.location-clear-btn:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+/* Error and Loading States */
+.text-error {
+  color: var(--color-error);
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Full viewport height */
+  font-size: 1.2rem;
+  color: var(--color-text-secondary);
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+  color: var(--color-primary);
+  font-size: 2rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.mr-2 {
+  margin-right: 8px; /* For icons */
+}

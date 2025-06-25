@@ -1,0 +1,19 @@
+/* src/app/root-layout.module.css */
+.mainContent {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1rem;
+  min-height: calc(100vh - 80px); /* Adjust based on Navbar height (e.g., 64px for a 64px tall navbar) */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Align content to the top within the main area */
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 0.5rem;
+  }
+}

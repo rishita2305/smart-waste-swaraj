@@ -1,0 +1,324 @@
+/* src/app/landing-page.module.css */
+
+.landingPageContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* --- Hero Section --- */
+.heroSection {
+  position: relative;
+  height: calc(100vh - 80px); /* Adjust based on your Navbar height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden; /* Ensure overlay doesn't spill */
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(0, 123, 255, 0.8) /* primary */, rgba(40, 167, 69, 0.8) /* secondary */);
+  z-index: 0;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 10;
+  padding: 2rem;
+  max-width: 960px;
+}
+
+.heroTitle {
+  font-size: 3.5rem; /* Equivalent to text-5xl md:text-6xl */
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1.2;
+}
+
+.heroSubtitle {
+  font-size: 1.5rem; /* Equivalent to text-xl md:text-2xl */
+  margin-bottom: 2rem;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.getStartedButton {
+  background-color: var(--color-accent);
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px; /* full rounded */
+  font-size: 1.125rem; /* text-lg md:text-xl */
+  transition: all 0.3s ease;
+  transform: scale(1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05); /* shadow-lg */
+}
+
+.getStartedButton:hover {
+  background-color: #e6b100; /* Darker yellow */
+  transform: scale(1.05);
+}
+
+.buttonIcon {
+  margin-right: 0.5rem;
+}
+
+/* --- About Us Section --- */
+.aboutUsSection {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  background-color: white;
+  text-align: center;
+}
+
+.sectionTitle {
+  font-size: 2.25rem; /* text-4xl */
+  font-weight: bold;
+  color: var(--color-primary);
+  margin-bottom: 3rem;
+}
+
+.aboutContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.aboutImageWrapper {
+  width: 100%;
+}
+
+.aboutImage {
+  border-radius: 0.5rem; /* rounded-lg */
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05); /* shadow-xl */
+  width: 100%;
+  height: auto;
+}
+
+.aboutText {
+  width: 100%;
+  text-align: left;
+}
+
+.aboutParagraph {
+  font-size: 1.125rem; /* text-lg */
+  color: var(--color-text-body);
+  margin-bottom: 1rem;
+}
+
+.exploreMapButton {
+  margin-top: 1.5rem;
+  display: inline-block;
+  background-color: var(--color-secondary);
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem; /* rounded-lg */
+  transition: background-color 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+}
+
+.exploreMapButton:hover {
+  background-color: #1e7e34; /* Darker green */
+}
+
+/* --- Benefits Section --- */
+.benefitsSection {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  background-color: var(--color-light); /* bg-gray-100 */
+  text-align: center;
+}
+
+.benefitsGrid {
+  display: grid;
+  grid-template-columns: 1fr; /* Default to single column */
+  gap: 2rem;
+}
+
+.benefitCard {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem; /* rounded-lg */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+  transition: box-shadow 0.2s ease;
+}
+
+.benefitCard:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* hover:shadow-lg */
+}
+
+.benefitIcon {
+  font-size: 3.125rem; /* text-5xl */
+  margin-bottom: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+  display: block; /* To center with margin auto */
+}
+
+.benefitTitle {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 600;
+  color: var(--color-text-body);
+  margin-bottom: 0.5rem;
+}
+
+.benefitDescription {
+  color: var(--color-text-muted);
+}
+
+/* --- FAQ Section --- */
+.faqSection {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  background-color: white;
+}
+
+.faqList {
+  max-width: 768px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.faqItem {
+  background-color: #f8f9fa; /* bg-gray-50 */
+  padding: 1rem;
+  border-radius: 0.5rem; /* rounded-lg */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* shadow-sm */
+  cursor: pointer;
+  border: 1px solid #dee2e6; /* border border-gray-200 */
+}
+
+.faqSummary {
+  font-weight: 600;
+  font-size: 1.125rem; /* text-lg */
+  color: var(--color-text-body);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.faqIcon {
+  margin-left: 0.5rem;
+}
+
+.faqAnswer {
+  margin-top: 0.5rem;
+  color: var(--color-text-muted);
+  padding-left: 2rem;
+}
+
+/* --- Contact Us Section --- */
+.contactSection {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  background-color: var(--color-light); /* bg-gray-100 */
+  text-align: center;
+}
+
+.contactSubtitle {
+  font-size: 1.125rem; /* text-lg */
+  color: var(--color-text-body);
+  margin-bottom: 2rem;
+}
+
+.contactLinks {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+.contactLink {
+  font-size: 1.5rem; /* text-2xl */
+  color: var(--color-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.contactLink:hover {
+  color: #0056b3; /* Darker blue, similar to hover for primary */
+}
+
+/* --- Footer --- */
+.footer {
+  background-color: var(--color-dark);
+  color: white;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.footer p {
+  text-align: center;
+}
+
+.footerLinks {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.footerLink {
+  font-size: 0.875rem; /* text-sm */
+}
+
+.footerLink:hover {
+  text-decoration: underline;
+}
+
+/* --- Media Queries --- */
+@media (min-width: 768px) { /* md breakpoint */
+  .aboutContent {
+    flex-direction: row;
+  }
+  .aboutImageWrapper,
+  .aboutText {
+    width: 50%;
+  }
+
+  .benefitsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 767px) { /* Styles for smaller screens */
+  .heroTitle {
+    font-size: 2.5rem; /* Adjust for mobile */
+  }
+  .heroSubtitle {
+    font-size: 1.125rem;
+  }
+  .getStartedButton {
+    font-size: 1rem;
+    padding: 0.625rem 1.25rem;
+  }
+  .sectionTitle {
+    font-size: 2rem;
+  }
+  .aboutParagraph {
+    font-size: 1rem;
+  }
+  .contactLinks {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .contactLink {
+    font-size: 1.25rem;
+  }
+}

@@ -1,0 +1,150 @@
+/* src/components/navbar.module.css */
+
+.navbar {
+  background-color: white;
+  padding: 1rem 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbarContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5rem;
+}
+
+.navbarBrand {
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.brandIcon {
+  font-size: 1.8rem;
+  line-height: 1; /* Aligns emoji better */
+}
+
+.menuToggle {
+  display: none; /* Hidden on desktop */
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: var(--color-dark);
+}
+
+.navbarNav {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.navbarNav li {
+  margin-left: 1.5rem;
+}
+
+.navLink, .navLinkButton {
+  color: var(--color-dark);
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--border-radius);
+  transition: color var(--transition-speed) ease, background-color var(--transition-speed) ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap; /* Prevent wrapping */
+}
+
+.navLink:hover, .navLinkButton:hover {
+  color: var(--color-primary);
+  background-color: rgba(var(--color-primary-rgb), 0.05); /* Subtle hover effect */
+}
+
+.navLinkButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+}
+
+.navIcon {
+  font-size: 1.1rem;
+}
+
+.signupButton {
+  background-color: var(--color-secondary);
+  color: white;
+  padding: 0.7rem 1.2rem;
+  border-radius: 50px; /* Pill shape */
+  transition: background-color var(--transition-speed) ease, transform 0.2s ease;
+  font-weight: 600;
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+
+.signupButton:hover {
+  background-color: var(--color-secondary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+}
+
+.loadingState {
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .menuToggle {
+    display: block; /* Show hamburger on mobile */
+  }
+
+  .navbarNav {
+    flex-direction: column;
+    position: absolute;
+    top: 65px; /* Adjust based on navbar height */
+    left: 0;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #eee;
+    padding: 1.5rem 0;
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform var(--transition-speed) ease-out, opacity var(--transition-speed) ease-out;
+  }
+
+  .navbarNav.navOpen {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .navbarNav li {
+    margin: 0.5rem 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  .navLink, .navLinkButton {
+    display: block;
+    width: 90%;
+    margin: 0.5rem auto;
+    padding: 0.8rem;
+  }
+
+  .signupButton {
+    width: 90%;
+    margin: 1rem auto;
+  }
+}

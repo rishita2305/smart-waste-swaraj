@@ -1,0 +1,33 @@
+// postcss.config.js
+module.exports = {
+  plugins: {
+    // Keep your Tailwind CSS plugin for v4
+    '@tailwindcss/postcss': {},
+    // Keep Autoprefixer
+    autoprefixer: {},
+    // --- Add postcss-url to explicitly handle Leaflet image paths ---
+    'postcss-url': {
+      // The `url` function allows us to modify or ignore URLs.
+      url: (asset) => {
+        // If the URL contains 'images/marker-icon.png', 'images/marker-icon-2x.png',
+        // 'images/marker-shadow.png', 'images/layers.png', or 'images/layers-2x.png'
+        // (common Leaflet default icon paths)
+        if (asset.url.includes('images/marker-icon.png') ||
+            asset.url.includes('images/marker-icon-2x.png') ||
+            asset.url.includes('images/marker-shadow.png') ||
+            asset.url.includes('images/layers.png') ||
+            asset.url.includes('images/layers-2x.png')) {
+          // Log a warning (optional, helpful for debugging)
+          console.warn(`[postcss-url] Rewriting Leaflet asset URL: ${asset.url} to 'none'`);
+          // Rewrite the URL to 'none' to prevent it from being resolved.
+          // This stops the build error and effectively removes the image background.
+          return 'none';
+        }
+        // For all other URLs (e.g., your custom image paths if you use them elsewhere),
+        // return the original URL so they are processed normally.
+        return asset.url;
+      },
+    },
+    // ---------------------------------------------------------------
+  },
+};

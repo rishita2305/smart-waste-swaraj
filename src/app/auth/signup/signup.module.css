@@ -1,0 +1,234 @@
+/* src/app/auth/signup/signup.module.css */
+
+.signupPageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px); /* Adjust based on Navbar height */
+  padding: 2rem 1rem;
+  background: linear-gradient(to bottom left, #e0e7f1, var(--color-light)); /* Subtle gradient background */
+}
+
+.signupCard {
+  background-color: white;
+  padding: 3rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  width: 100%;
+  max-width: 450px;
+  border: 1px solid #e9ecef;
+}
+
+.cardTitle {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--color-primary);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.025em;
+}
+
+.cardSubtitle {
+  font-size: 1.15rem;
+  color: var(--color-text-muted);
+  margin-bottom: 2rem;
+}
+
+.signupForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.inputGroup {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 1rem;
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+}
+
+.inputField {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+  outline: none;
+}
+
+.inputField:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25);
+}
+
+.errorMessage {
+  color: var(--status-error);
+  font-size: 0.9rem;
+  margin-top: -0.5rem;
+  text-align: left;
+}
+
+.userTypeSelection {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.userTypeLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--color-text-body);
+  font-weight: 500;
+  transition: color var(--transition-speed) ease;
+}
+
+.userTypeLabel:hover {
+  color: var(--color-primary);
+}
+
+.radioInput {
+  display: none; /* Hide default radio button */
+}
+
+.radioCustom {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--color-primary);
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  transition: all var(--transition-speed) ease;
+}
+
+.radioInput:checked + .radioCustom {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.radioInput:checked + .radioCustom::after {
+  content: '';
+  width: 0.6rem;
+  height: 0.6rem;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+}
+
+.radioIcon {
+  color: var(--color-primary);
+  font-size: 1.1rem;
+}
+
+/* No need for this, radioInput:checked + .radioCustom already handles the checkmark */
+/* .radioInput:checked ~ .radioIcon {
+  color: var(--color-primary);
+} */
+
+
+.submitButton {
+  background-color: var(--color-primary); /* Changed to primary green for sign up */
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1.15rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-speed) ease, transform 0.2s ease, box-shadow var(--transition-speed) ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(40, 167, 69, 0.3);
+}
+
+.submitButton:disabled {
+  background-color: #a0a0a0;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.loadingSpinner {
+  animation: spin 1s linear infinite;
+  font-size: 1.15rem;
+}
+
+.buttonIcon {
+  font-size: 1.15rem;
+}
+
+.loginPrompt {
+  margin-top: 2rem;
+  color: var(--color-text-body);
+  font-size: 1rem;
+}
+
+.loginLink {
+  color: var(--color-secondary); /* Changed to secondary blue for login link */
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition-speed) ease, text-decoration var(--transition-speed) ease;
+}
+
+.loginLink:hover {
+  color: var(--color-secondary-dark);
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .signupCard {
+    padding: 2rem 1.5rem;
+    margin: 1rem;
+  }
+  .cardTitle {
+    font-size: 2rem;
+  }
+  .cardSubtitle {
+    font-size: 1rem;
+  }
+  .submitButton {
+    font-size: 1rem;
+    padding: 0.8rem 1rem;
+  }
+  .inputField {
+    padding: 0.8rem 0.8rem 0.8rem 2.5rem;
+  }
+  .inputIcon {
+    left: 0.8rem;
+    font-size: 1rem;
+  }
+  .userTypeSelection {
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: flex-start; /* Align radios to left */
+  }
+  .userTypeLabel {
+    width: 100%; /* Full width for easier tapping */
+    justify-content: flex-start;
+  }
+}

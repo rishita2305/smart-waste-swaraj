@@ -1,0 +1,102 @@
+/* src/components/map/waste-map.module.css */
+
+.mapContainer {
+  height: 500px; /* Adjust as needed for your layout */
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.customMapMarker {
+  /* This targets the div created by L.divIcon */
+  font-size: 2.5rem; /* Adjust icon size */
+  line-height: 1; /* Remove extra space above/below icon */
+  text-align: center;
+  position: relative;
+  top: 3px; /* Fine-tune vertical alignment if needed */
+}
+
+.customMapMarker svg {
+  display: block; /* Ensure SVG fills its container */
+  width: 100%;
+  height: 100%;
+}
+
+/* Optional: Styles for the popup content */
+.popupContent {
+  padding: 5px;
+  text-align: center;
+  min-width: 150px;
+}
+
+.popupTitle {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+  color: var(--color-primary-dark);
+}
+
+.popupDescription {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 8px;
+}
+
+.popupStatus {
+  font-weight: bold;
+  font-size: 0.95rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.statusPending {
+  background-color: var(--status-pending-bg);
+  color: var(--status-pending);
+}
+
+.statusAssigned {
+  background-color: var(--status-assigned-bg);
+  color: var(--status-assigned);
+}
+
+.statusCompleted {
+  background-color: var(--status-completed-bg);
+  color: var(--status-completed);
+}
+
+.popupDetailsButton {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.popupDetailsButton:hover {
+  background-color: var(--color-primary-dark);
+}
+
+/* Define CSS variables for status colors (e.g., in global.css or equivalent) */
+/*
+:root {
+  --status-pending: #ffc107;
+  --status-pending-bg: #fffbe6;
+  --status-assigned: #007bff;
+  --status-assigned-bg: #e6f2ff;
+  --status-completed: #28a745;
+  --status-completed-bg: #e6ffe6;
+
+  --color-primary: #4CAF50;
+  --color-primary-dark: #45a049;
+  --color-secondary: #007bff;
+  --color-text-primary: #333;
+  --color-text-secondary: #666;
+  --color-error: #dc3545;
+}
+*/
