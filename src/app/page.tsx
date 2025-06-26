@@ -7,7 +7,10 @@ import styles from './landing-page.module.css'; // Import module CSS
 
 export default function LandingPage() {
   return (
+
+    
     <div className={styles.landingPageContainer}>
+
       {/* Hero Section */}
       <section
         className={styles.heroSection}

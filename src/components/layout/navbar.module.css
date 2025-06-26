@@ -1,150 +1,267 @@
-/* src/components/navbar.module.css */
+/* src/components/layout/navbar.module.css */
 
+/* --- Root Variables (assuming these are in your globals.css, if not, add them!) --- */
+/*
+:root {
+  --color-primary: #4CAF50; // A vibrant green
+  --color-secondary: #FFC107; // An engaging yellow/orange
+  --color-accent: #2196F3; // A bright blue for highlights
+  --color-dark: #333; // Darker shade for text/icons
+  --text-light: #f4f4f4; // Light text color
+}
+*/
+
+/* --- Base Navbar Styling --- */
 .navbar {
-  background-color: white;
-  padding: 1rem 0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  background-color: var(--color-primary); /* Use a more vibrant primary color */
+  padding: 0.8rem 0; /* Slightly reduce padding for a sleeker look */
+  color: var(--text-light); /* Ensure text is light on dark primary background */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); /* More pronounced shadow */
   position: sticky;
   top: 0;
   z-index: 1000;
+  transition: all 0.3s ease-in-out; /* Smooth transitions for hover/scroll effects */
 }
 
-.navbarContainer {
-  max-width: 1200px;
-  margin: 0 auto;
+.container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem; /* Increased horizontal padding */
+  min-height: 60px; /* Ensure a consistent height */
 }
 
-.navbarBrand {
-  font-size: 1.7rem;
-  font-weight: bold;
-  color: var(--color-primary);
+/* --- Logo Styling --- */
+.logo {
+  font-size: 1.8rem; /* Slightly larger logo text */
+  font-weight: 700; /* Bolder font weight */
+  color: var(--text-light);
+  text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem; /* Space between icon and text */
+  transition: color 0.3s ease;
+  letter-spacing: 0.05em; /* A little letter spacing */
 }
 
-.brandIcon {
-  font-size: 1.8rem;
-  line-height: 1; /* Aligns emoji better */
+.logo:hover {
+  color: var(--color-secondary); /* Highlight logo on hover */
+  transform: scale(1.02); /* Subtle zoom effect */
 }
 
-.menuToggle {
-  display: none; /* Hidden on desktop */
-  font-size: 1.8rem;
-  cursor: pointer;
-  color: var(--color-dark);
+.logoIcon {
+  font-size: 2.2rem; /* Size of the emoji/icon next to text */
+  line-height: 1; /* Align text better */
 }
 
-.navbarNav {
+/* --- Navigation Links Container --- */
+.navLinks {
   display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  gap: 2rem; /* Increased space between nav items for clarity */
   align-items: center;
+  transition: all 0.4s ease-in-out; /* Smooth transition for mobile menu slide */
 }
 
-.navbarNav li {
-  margin-left: 1.5rem;
-}
-
-.navLink, .navLinkButton {
-  color: var(--color-dark);
+/* --- Individual Navigation Link Styling --- */
+.navLink {
+  color: var(--text-light);
+  font-size: 1.05rem; /* Slightly larger font for main links */
   font-weight: 500;
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--border-radius);
-  transition: color var(--transition-speed) ease, background-color var(--transition-speed) ease;
-  display: flex;
+  text-decoration: none;
+  padding: 0.6rem 1rem; /* More generous padding for clickable area */
+  border-radius: 0.4rem; /* Slightly rounded corners */
+  transition: all 0.3s ease; /* Smooth transitions for hover effects */
+  display: flex; /* For icon and text alignment */
   align-items: center;
-  gap: 0.5rem;
-  white-space: nowrap; /* Prevent wrapping */
+  gap: 0.5rem; /* Space between icon and text */
+  white-space: nowrap; /* Prevent links from wrapping */
+  position: relative; /* For the custom underline effect */
 }
 
-.navLink:hover, .navLinkButton:hover {
-  color: var(--color-primary);
-  background-color: rgba(var(--color-primary-rgb), 0.05); /* Subtle hover effect */
+.navLink:hover {
+  color: var(--color-secondary); /* Link text highlights on hover */
+  background-color: rgba(255, 255, 255, 0.1); /* Subtle background glow */
+  transform: translateY(-3px); /* Noticeable lift effect */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Soft shadow on hover */
 }
 
-.navLinkButton {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: var(--font-sans);
-  font-size: 1rem;
+/* Custom animated underline for nav links on hover */
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0; /* Starts hidden */
+  height: 2px;
+  background-color: var(--color-accent); /* Accent color for underline */
+  transition: width 0.3s ease; /* Animate width */
+}
+
+.navLink:hover::after {
+  width: 80%; /* Expands to 80% width on hover */
 }
 
 .navIcon {
-  font-size: 1.1rem;
+  font-size: 1.15rem; /* Icon size */
+  transition: color 0.3s ease;
 }
 
-.signupButton {
-  background-color: var(--color-secondary);
-  color: white;
-  padding: 0.7rem 1.2rem;
-  border-radius: 50px; /* Pill shape */
-  transition: background-color var(--transition-speed) ease, transform 0.2s ease;
+.navLink:hover .navIcon {
+  color: var(--color-secondary); /* Icon color changes on hover */
+}
+
+/* --- Authentication Buttons (Login/Signup) --- */
+.authButton {
+  background-color: var(--color-secondary); /* Prominent secondary color */
+  color: var(--color-dark); /* Dark text on bright button */
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px; /* Pill shape */
   font-weight: 600;
-  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+  transition: all 0.3s ease;
+  border: none; /* Ensure no default button border */
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Soft shadow */
 }
 
-.signupButton:hover {
-  background-color: var(--color-secondary-dark);
+.authButton:hover {
+  background-color: var(--color-accent); /* Change on hover for a striking effect */
+  color: white; /* White text on accent background */
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-.loadingState {
-  color: var(--color-text-muted);
-  font-style: italic;
-  font-size: 0.9rem;
+/* --- Logout Button --- */
+.logoutButton {
+  background: none;
+  border: 1px solid var(--text-light); /* Light border */
+  color: var(--text-light);
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px; /* Pill shape */
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  white-space: nowrap; /* Prevent user email from wrapping */
 }
 
-/* Mobile styles */
-@media (max-width: 768px) {
+.logoutButton:hover {
+  background-color: var(--text-light); /* Invert colors on hover */
+  color: var(--color-primary); /* Primary color text on light background */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+
+/* --- Mobile Menu Toggle (Hamburger/X icon) --- */
+.menuToggle {
+  display: none; /* Hidden on desktop */
+  font-size: 2rem;
+  color: var(--text-light);
+  cursor: pointer;
+  z-index: 1001; /* Ensure it's above other elements when active */
+  transition: transform 0.3s ease;
+}
+
+.menuToggle:hover {
+  transform: scale(1.1); /* Zoom effect on hover */
+}
+
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 992px) { /* Adjust breakpoint for larger tablets */
+  .container {
+    padding: 0 1rem;
+  }
+  .navLinks {
+    gap: 1.5rem;
+  }
+  .navLink, .authButton, .logoutButton {
+    font-size: 0.95rem;
+    padding: 0.5rem 0.8rem;
+  }
+}
+
+@media (max-width: 768px) { /* Standard mobile breakpoint */
   .menuToggle {
-    display: block; /* Show hamburger on mobile */
+    display: block; /* Show hamburger/X icon */
   }
 
-  .navbarNav {
-    flex-direction: column;
+  .navLinks {
+    flex-direction: column; /* Stack links vertically */
     position: absolute;
-    top: 65px; /* Adjust based on navbar height */
-    left: 0;
-    width: 100%;
-    background-color: white;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    border-top: 1px solid #eee;
-    padding: 1.5rem 0;
-    transform: translateY(-100%);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform var(--transition-speed) ease-out, opacity var(--transition-speed) ease-out;
+    top: 0; /* Start from the very top of the viewport */
+    right: 0;
+    width: 250px; /* Fixed width for the sidebar menu */
+    height: 100vh; /* Full viewport height */
+    background-color: var(--color-primary); /* Same as navbar background */
+    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.3); /* Shadow on the left edge */
+    padding-top: 5rem; /* Space for the fixed navbar */
+    transform: translateX(100%); /* Start off-screen to the right */
+    opacity: 0; /* Hidden initially */
+    pointer-events: none; /* Disable interaction when hidden */
+    display: flex; /* Always flex column now */
+    gap: 0; /* Remove gap between items when stacked */
+    align-items: stretch; /* Stretch items to fill menu width */
+    justify-content: flex-start; /* Align items to top */
   }
 
-  .navbarNav.navOpen {
-    transform: translateY(0);
-    opacity: 1;
-    pointer-events: auto;
+  .navLinks.active {
+    transform: translateX(0); /* Slide in from the right */
+    opacity: 1; /* Fade in */
+    pointer-events: auto; /* Enable interaction when active */
   }
 
-  .navbarNav li {
-    margin: 0.5rem 0;
-    width: 100%;
-    text-align: center;
+  .navLink, .authButton, .logoutButton {
+    width: 90%; /* Almost full width of the menu */
+    margin: 0.5rem auto; /* Center items with vertical spacing */
+    padding: 1rem 1.5rem; /* More padding for easier tapping */
+    font-size: 1.1rem; /* Larger font for mobile */
+    justify-content: flex-start; /* Align text and icon to the left */
+    border-radius: 0.3rem; /* Slightly less rounded */
+    box-shadow: none; /* Remove individual item shadows */
+    transform: none; /* Remove individual item transforms */
   }
 
-  .navLink, .navLinkButton {
-    display: block;
-    width: 90%;
-    margin: 0.5rem auto;
-    padding: 0.8rem;
+  .authButton {
+    background-color: var(--color-secondary); /* Keep original button color */
+    color: var(--color-dark);
   }
 
-  .signupButton {
-    width: 90%;
-    margin: 1rem auto;
+  .authButton:hover {
+    background-color: var(--color-accent);
+    color: white;
+  }
+
+  .logoutButton {
+    border-color: var(--text-light);
+    color: var(--text-light);
+  }
+
+  .logoutButton:hover {
+    background-color: var(--text-light);
+    color: var(--color-primary);
+  }
+
+  /* Specific adjustment for logout button text */
+  .logoutButton span { /* If you have text in a span inside logoutButton */
+    white-space: normal; /* Allow text to wrap if it's very long */
+  }
+}
+
+@media (max-width: 480px) { /* Smaller mobile devices */
+  .logo {
+    font-size: 1.6rem;
+  }
+  .logoIcon {
+    font-size: 2rem;
+  }
+  .navLinks {
+    width: 220px; /* Slightly narrower menu for very small screens */
+  }
+  .navLink, .authButton, .logoutButton {
+    font-size: 1rem;
+    padding: 0.8rem 1rem;
   }
 }

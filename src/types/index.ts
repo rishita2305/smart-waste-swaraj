@@ -1,6 +1,8 @@
 // src/types/index.ts
 
 
+
+export type WasteStatus = 'pending' | 'assigned' | 'completed';
 export type Location = {
   latitude: number;
   longitude: number;
@@ -29,6 +31,7 @@ export interface WasteListing {
   userId: string; // ID of the waste generator
   wasteType: string; // e.g., "Plastic", "Organic", "Paper"
   quantity: string; // e.g., "5 kg", "2 large bags"
+   unit: string; 
   location: string; // Pickup location
   description?: string; // Optional detailed description
   status: 'pending' | 'assigned' | 'completed';

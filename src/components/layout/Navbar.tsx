@@ -1,88 +1,90 @@
-// src/components/Navbar.tsx
+// src/components/layout/Navbar.tsx
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { useData } from '../../contexts/DataContext'; // Adjust path if necessary
-import { FaBars, FaTimes, FaUserCircle, FaSignOutAlt, FaHome, FaInfoCircle, FaBookOpen } from 'react-icons/fa';
-import styles from './navbar.module.css';
+import { useState } from 'react'; // Import useState for the mobile menu toggle
+import { useData } from '../../contexts/DataContext';
+import {
+  FaBars,        // Hamburger icon
+  FaTimes,       // Close icon (X)
+  FaHome,
+  FaTachometerAlt, // Dashboard icon
+  FaMapMarkedAlt,  // Waste Map icon
+  FaPlusCircle,    // List Waste icon
+  FaBookOpen,      // Learn icon
+  FaSignInAlt,     // Login icon
+  FaUserPlus,      // Signup icon
+  FaSignOutAlt,    // Logout icon
+  FaUserCircle     // User profile icon
+} from 'react-icons/fa'; // Import React Icons
+
+import styles from './navbar.module.css'; // Import module CSS
 
 export default function Navbar() {
-  const { currentUser, logout, loading } = useData();
-  const [isOpen, setIsOpen] = useState(false);
+  const { currentUser, logout } = useData();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State for mobile menu
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleNavLinkClick = () => {
+    setIsMobileMenuOpen(false); // Close mobile menu when a link is clicked
   };
 
   const handleLogout = () => {
     logout();
-    setIsOpen(false); // Close menu on logout
+    setIsMobileMenuOpen(false); // Close mobile menu on logout
   };
 
   return (
     <nav className={styles.navbar}>
-      <div className={styles.navbarContainer}>
-        <Link href="/" className={styles.navbarBrand}>
-          <span className={styles.brandIcon}>♻️</span> Smart Waste Swaraj
+      <div className={styles.container}>
+        <Link href="/" className={styles.logo} onClick={handleNavLinkClick}>
+          <span className={styles.logoIcon}>♻️</span> Smart Waste Swaraj
         </Link>
 
-        <div className={styles.menuToggle} onClick={toggleMenu}>
-          {isOpen ? <FaTimes /> : <FaBars />}
+        {/* Mobile Menu Toggle Button */}
+        <div className={styles.menuToggle} onClick={toggleMobileMenu}>
+          {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
         </div>
 
-        <ul className={`${styles.navbarNav} ${isOpen ? styles.navOpen : ''}`}>
-          <li>
-            <Link href="/" className={styles.navLink} onClick={() => setIsOpen(false)}>
-              <FaHome className={styles.navIcon} /> Home
+        {/* Navigation Links - Conditional class for mobile view */}
+        <div className={`${styles.navLinks} ${isMobileMenuOpen ? styles.active : ''}`}>
+          <Link href="/" className={styles.navLink} onClick={handleNavLinkClick}>
+            <FaHome className={styles.navIcon} /> Home
+          </Link>
+          <Link href="/dashboard" className={styles.navLink} onClick={handleNavLinkClick}>
+            <FaTachometerAlt className={styles.navIcon} /> Dashboard
+          </Link>
+          <Link href="/map" className={styles.navLink} onClick={handleNavLinkClick}>
+            <FaMapMarkedAlt className={styles.navIcon} /> Waste Map
+          </Link>
+          {currentUser?.userType === 'generator' && (
+            <Link href="/list-waste" className={styles.navLink} onClick={handleNavLinkClick}>
+              <FaPlusCircle className={styles.navIcon} /> List Waste
             </Link>
-          </li>
-          <li>
-            <Link href="/learn" className={styles.navLink} onClick={() => setIsOpen(false)}>
-              <FaBookOpen className={styles.navIcon} /> Learn
-            </Link>
-          </li>
-          <li>
-            <Link href="/about" className={styles.navLink} onClick={() => setIsOpen(false)}>
-              <FaInfoCircle className={styles.navIcon} /> About Us
-            </Link>
-          </li>
+          )}
+          <Link href="/learn" className={styles.navLink} onClick={handleNavLinkClick}>
+            <FaBookOpen className={styles.navIcon} /> Learn
+          </Link>
 
-          {loading ? (
-            // Optional: Show a subtle loader or nothing while checking auth status
-            <li className={styles.loadingState}>Checking Auth...</li>
+          {/* Conditional rendering for Auth buttons */}
+          {currentUser ? (
+            <button onClick={handleLogout} className={`${styles.logoutButton} ${styles.navLink}`}>
+              <FaSignOutAlt className={styles.navIcon} /> Logout ({currentUser.email.split('@')[0]})
+            </button>
           ) : (
             <>
-              {currentUser ? (
-                <>
-                  <li>
-                    <Link href="/dashboard" className={styles.navLink} onClick={() => setIsOpen(false)}>
-                      <FaUserCircle className={styles.navIcon} /> Dashboard
-                    </Link>
-                  </li>
-                  <li>
-                    <button onClick={handleLogout} className={styles.navLinkButton}>
-                      <FaSignOutAlt className={styles.navIcon} /> Logout
-                    </button>
-                  </li>
-                </>
-              ) : (
-                <>
-                  <li>
-                    <Link href="/auth/login" className={styles.navLink} onClick={() => setIsOpen(false)}>
-                      Login
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/auth/signup" className={`${styles.navLink} ${styles.signupButton}`} onClick={() => setIsOpen(false)}>
-                      Sign Up
-                    </Link>
-                  </li>
-                </>
-              )}
+              <Link href="/auth/login" className={`${styles.authButton} ${styles.navLink}`} onClick={handleNavLinkClick}>
+                <FaSignInAlt className={styles.navIcon} /> Login
+              </Link>
+              <Link href="/auth/signup" className={`${styles.authButton} ${styles.navLink}`} onClick={handleNavLinkClick}>
+                <FaUserPlus className={styles.navIcon} /> Signup
+              </Link>
             </>
           )}
-        </ul>
+        </div>
       </div>
     </nav>
   );
