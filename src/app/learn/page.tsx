@@ -9,9 +9,12 @@ export default function LearnPage() {
     <div className={styles.learnContainer}>
       <header className={styles.heroSection}>
         <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>Empower Your Knowledge, Empower Our Planet.</h1>
+          <h1 className={styles.heroTitle}>
+            Empower Your Knowledge, Empower Our Planet.
+          </h1>
           <p className={styles.heroSubtitle}>
-            Dive deep into the world of sustainable waste management. Learn, act, and inspire change.
+            Dive deep into the world of sustainable waste management. Learn,
+            act, and inspire change.
           </p>
           <Link href="#featured-topics" className={styles.heroButton}>
             Explore Topics <FaLightbulb className={styles.heroButtonIcon} />
@@ -21,28 +24,36 @@ export default function LearnPage() {
 
       <section id="featured-topics" className={styles.section}>
         <h2 className={styles.sectionTitle}>Featured Learning Paths</h2>
-        <p className={styles.sectionSubtitle}>Start your journey with these essential guides.</p>
+        <p className={styles.sectionSubtitle}>
+          Start your journey with these essential guides.
+        </p>
         <div className={styles.cardGrid}>
           <div className={styles.card}>
             <Image
-              src="/images/segregation_guide.jpg" // Path to your image
+              src="/waste.png"
               alt="Waste Segregation Guide"
               width={400}
               height={250}
-              className={styles.cardImage}
+              className={`${styles.cardImage}`}
             />
+
             <h3 className={styles.cardTitle}>Mastering Waste Segregation</h3>
             <p className={styles.cardDescription}>
-              Learn the crucial art of separating waste at its source for efficient recycling and composting.
+              Learn the crucial art of separating waste at its source for
+              efficient recycling and composting.
             </p>
-            <Link href="/learn/segregation" className={styles.cardButton}>
+            <Link
+              href="https://greensutra.in/news/start-waste-segregation-at-source/"
+              target="_blank"
+              className={styles.cardButton}
+            >
               Read More <FaRecycle />
             </Link>
           </div>
 
           <div className={styles.card}>
             <Image
-              src="/images/composting_benefits.jpg" // Path to your image
+              src="/composting.jpg" // Path to your image
               alt="Benefits of Composting"
               width={400}
               height={250}
@@ -50,16 +61,21 @@ export default function LearnPage() {
             />
             <h3 className={styles.cardTitle}>The Power of Composting</h3>
             <p className={styles.cardDescription}>
-              Transform organic waste into valuable fertilizer. Discover its environmental and economic benefits.
+              Transform organic waste into valuable fertilizer. Discover its
+              environmental and economic benefits.
             </p>
-            <Link href="/learn/composting" className={styles.cardButton}>
+            <Link
+              href="https://www.youtube.com/watch?v=_K25WjjCBuw"
+              target="_blank"
+              className={styles.cardButton}
+            >
               Watch Video <FaTree />
             </Link>
           </div>
 
           <div className={styles.card}>
             <Image
-              src="/images/urban_recycling.jpg" // Path to your image
+              src="/recycling.jpeg" // Path to your image
               alt="Urban Recycling"
               width={400}
               height={250}
@@ -67,9 +83,14 @@ export default function LearnPage() {
             />
             <h3 className={styles.cardTitle}>Recycling in Urban Areas</h3>
             <p className={styles.cardDescription}>
-              Navigate the complexities of urban recycling programs and contribute effectively.
+              Navigate the complexities of urban recycling programs and
+              contribute effectively.
             </p>
-            <Link href="/learn/urban-recycling" className={styles.cardButton}>
+            <Link
+              href="https://we-recycle.org/"
+              target="_blank"
+              className={styles.cardButton}
+            >
               Get Started <FaRecycle />
             </Link>
           </div>
@@ -78,7 +99,9 @@ export default function LearnPage() {
 
       <section className={styles.sectionAlt}>
         <h2 className={styles.sectionTitle}>Watch & Learn: Video Resources</h2>
-        <p className={styles.sectionSubtitle}>Visual guides and inspiring stories to deepen your understanding.</p>
+        <p className={styles.sectionSubtitle}>
+          Visual guides and inspiring stories to deepen your understanding.
+        </p>
         <div className={styles.videoGrid}>
           <div className={styles.videoCard}>
             <div className={styles.videoThumbnail}>
@@ -90,12 +113,21 @@ export default function LearnPage() {
                 layout="responsive" // Make image responsive within container
                 className={styles.videoImage}
               />
-              <a href="https://www.youtube.com/watch?v=your-video-id-1" target="_blank" rel="noopener noreferrer" className={styles.playButton}>
+              <a
+                href="https://www.youtube.com/watch?v=your-video-id-1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.playButton}
+              >
                 <FaPlayCircle />
               </a>
             </div>
-            <h3 className={styles.videoTitle}>Composting Basics for Beginners</h3>
-            <p className={styles.videoDescription}>A comprehensive guide to starting your home composting journey.</p>
+            <h3 className={styles.videoTitle}>
+              Composting Basics for Beginners
+            </h3>
+            <p className={styles.videoDescription}>
+              A comprehensive guide to starting your home composting journey.
+            </p>
           </div>
 
           <div className={styles.videoCard}>
@@ -108,12 +140,21 @@ export default function LearnPage() {
                 layout="responsive"
                 className={styles.videoImage}
               />
-              <a href="https://www.youtube.com/watch?v=your-video-id-2" target="_blank" rel="noopener noreferrer" className={styles.playButton}>
+              <a
+                href="https://www.youtube.com/watch?v=your-video-id-2"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.playButton}
+              >
                 <FaPlayCircle />
               </a>
             </div>
-            <h3 className={styles.videoTitle}>The Global Plastic Crisis: What You Can Do</h3>
-            <p className={styles.videoDescription}>Understand the impact of plastic and simple steps to reduce it.</p>
+            <h3 className={styles.videoTitle}>
+              The Global Plastic Crisis: What You Can Do
+            </h3>
+            <p className={styles.videoDescription}>
+              Understand the impact of plastic and simple steps to reduce it.
+            </p>
           </div>
         </div>
       </section>
@@ -139,7 +180,9 @@ export default function LearnPage() {
       </section> */}
 
       <section className={styles.callToAction}>
-        <h2 className={styles.callToActionTitle}>Ready to Make a Difference?</h2>
+        <h2 className={styles.callToActionTitle}>
+          Ready to Make a Difference?
+        </h2>
         <p className={styles.callToActionSubtitle}>
           Join our community and apply your knowledge to real-world impact.
         </p>
