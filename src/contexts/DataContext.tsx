@@ -1,145 +1,210 @@
-// src/contexts/DataContext.tsx (Mock example for hackathon)
+// src/contexts/DataContext.tsx
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User, WasteListing, DataContextType } from '../types'; // Adjust path if needed
-import { v4 as uuidv4 } from 'uuid'; // npm install uuid @types/uuid
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { User, WasteListing, WasteListingLocation, Comment } from '../types'; // Import all necessary types
+
+// Define the type for your DataContext
+export interface DataContextType {
+  currentUser: User | null;
+  loading: boolean; // Correctly named 'loading'
+  wasteListings: WasteListing[];
+  users: User[];
+  login: (email: string, password: string) => Promise<boolean>;
+  signup: (user: Omit<User, 'id'>) => Promise<boolean>; // Assuming you have a signup function
+  logout: () => void;
+  assignCollectorToListing: (listingId: string, collectorId: string) => Promise<void>;
+  completeListing: (listingId: string) => Promise<void>;
+  createWasteListing: (listing: Omit<WasteListing, 'id' | 'createdAt' | 'status' | 'comments' | 'assignedCollectorId' | 'completedAt'>) => Promise<WasteListing>;
+  addCommentToListing: (listingId: string, comment: Omit<Comment, 'id' | 'createdAt'>) => Promise<void>;
+}
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
-export function DataProvider({ children }: { children: React.ReactNode }) {
+export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
   const [wasteListings, setWasteListings] = useState<WasteListing[]>([]);
   const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
 
+  // Simulate initial data load and authentication status
   useEffect(() => {
-    // Simulate loading from local storage or initial data
-    const storedUser = localStorage.getItem('currentUser');
-    const storedListings = localStorage.getItem('wasteListings');
-    const storedUsers = localStorage.getItem('users');
+    const fetchInitialData = async () => {
+      setLoading(true);
+      await new Promise(resolve => setTimeout(resolve, 800)); // Simulate API call delay
 
-    if (storedUser) {
-      setCurrentUser(JSON.parse(storedUser));
-    }
-    if (storedListings) {
-      setWasteListings(JSON.parse(storedListings));
-    } else {
-      // Initial mock listings if none exist
-      setWasteListings([
-        { id: uuidv4(), userId: 'generator1', wasteType: 'Plastic Bottles', quantity: '5 kg', location: '123 Main St', description: 'Clear plastic bottles, cleaned.', status: 'pending', createdAt: Date.now() },
-        { id: uuidv4(), userId: 'generator2', wasteType: 'Organic Food Waste', quantity: '2 kg', location: '456 Elm St', description: 'Daily kitchen scraps.', status: 'pending', createdAt: Date.now() - 86400000 },
-        { id: uuidv4(), userId: 'generator1', wasteType: 'Cardboard Boxes', quantity: '10 kg', location: '123 Main St', description: 'Flattened cardboard boxes.', status: 'assigned', assignedCollectorId: 'collector1', createdAt: Date.now() - 172800000 },
-        { id: uuidv4(), userId: 'generator3', wasteType: 'Newspaper', quantity: '3 kg', location: '789 Oak Ave', description: 'Old newspapers bundled.', status: 'completed', assignedCollectorId: 'collector2', createdAt: Date.now() - 259200000 },
-      ]);
-    }
-    if (storedUsers) {
-      setUsers(JSON.parse(storedUsers));
-    } else {
-        // Initial mock users
-        setUsers([
-            { id: 'generator1', email: 'gen@example.com', name: 'Alice Waste', userType: 'generator' },
-            { id: 'generator2', email: 'bob@example.com', name: 'Bob Eco', userType: 'generator' },
-            { id: 'generator3', email: 'charlie@example.com', name: 'Charlie Green', userType: 'generator' },
-            { id: 'collector1', email: 'col@example.com', name: 'David Clean', userType: 'collector' },
-            { id: 'collector2', email: 'emma@example.com', name: 'Emma Recycle', userType: 'collector' },
-        ]);
-    }
-    setLoading(false);
+      // Updated Dummy Users with names
+      const dummyUsers: User[] = [
+        { id: 'gen1', email: 'generator@example.com', name: 'Alice Generator', userType: 'generator', location: { latitude: 28.7041, longitude: 77.1025 } }, // Delhi
+        { id: 'col1', email: 'collector@example.com', name: 'Bob Collector', userType: 'collector', location: { latitude: 28.5355, longitude: 77.3910 } }, // Noida
+        { id: 'gen2', email: 'testgen@example.com', name: 'Charlie Gen', userType: 'generator', location: { latitude: 28.4595, longitude: 77.0266 } }, // Gurgaon
+        { id: 'buyer1', email: 'buyer@example.com', name: 'Diana Buyer', userType: 'generator', location: { latitude: 28.6000, longitude: 77.0500 } }, // Another generator/buyer
+      ];
+      setUsers(dummyUsers);
+
+      // More comprehensive Dummy Waste Listings with new fields
+      const dummyListings: WasteListing[] = [
+        {
+          id: 'wl1', userId: 'gen1', wasteType: 'Vegetable Peels', quantity: '2', unit: 'kg', description: 'Fresh kitchen waste, suitable for composting',
+          location: { latitude: 27.1751, longitude: 78.0421, address: 'Taj Ganj, Agra' }, status: 'pending', createdAt: Date.now() - 86400000 * 2,
+          itemType: 'waste', wasteCategory: 'biodegradable', imageUrl: 'https://placehold.co/400x300/a8e6cf/000000?text=Biodegradable+Waste'
+        },
+        {
+          id: 'wl2', userId: 'gen1', wasteType: 'Plastic Bottles (PET)', quantity: '500', unit: 'grams', description: 'Clean, crushed plastic bottles',
+          location: { latitude: 27.1800, longitude: 77.9900, address: 'Sikandra Road, Agra' }, status: 'assigned', assignedCollectorId: 'col1', createdAt: Date.now() - 86400000 * 3,
+          itemType: 'waste', wasteCategory: 'non_biodegradable', imageUrl: 'https://placehold.co/400x300/87ceeb/000000?text=Plastic+Bottles',
+          comments: [{ id: 'c1', userId: 'col1', userName: 'Bob Collector', text: 'On my way to pick this up!', createdAt: Date.now() - 86400000 * 0.5 }]
+        },
+        {
+          id: 'wl3', userId: 'gen2', wasteType: 'Old Newspapers', quantity: '10', unit: 'kg', description: 'Bundle of old newspapers and magazines',
+          location: { latitude: 27.2000, longitude: 77.9800, address: 'Civil Lines, Agra' }, status: 'pending', createdAt: Date.now() - 86400000 * 1,
+          itemType: 'old_item', wasteCategory: 'recyclable_paper', imageUrl: 'https://placehold.co/400x300/ffd700/000000?text=Old+Newspapers', price: 150,
+          comments: [{ id: 'c2', userId: 'buyer1', userName: 'Diana Buyer', text: 'Interested! Can I pick up tomorrow?', createdAt: Date.now() - 86400000 * 0.2 }]
+        },
+        {
+          id: 'wl4', userId: 'gen1', wasteType: 'Used Batteries', quantity: '1', unit: 'bag', description: 'Assorted used AA/AAA batteries',
+          location: { latitude: 27.1950, longitude: 78.0100, address: 'Agra Cantt, Agra' }, status: 'completed', assignedCollectorId: 'col1', createdAt: Date.now() - 86400000 * 5, completedAt: Date.now() - 86400000 * 4,
+          itemType: 'waste', wasteCategory: 'hazardous', imageUrl: 'https://placehold.co/400x300/ff6347/000000?text=Used+Batteries'
+        },
+        {
+          id: 'wl5', userId: 'gen2', wasteType: 'Old Sofa', quantity: '1', unit: 'unit', description: '3-seater sofa, good condition, needs new cover.',
+          location: { latitude: 27.1600, longitude: 78.0300, address: 'Taj East Gate, Agra' }, status: 'pending', createdAt: Date.now() - 86400000 * 0.8,
+          itemType: 'old_item', imageUrl: 'https://placehold.co/400x300/8b4513/ffffff?text=Old+Sofa', price: 1500,
+        },
+        {
+          id: 'wl6', userId: 'gen1', wasteType: 'Mixed Food Waste', quantity: '3', unit: 'kg', description: 'Daily kitchen scraps and leftover food',
+          location: { latitude: 27.1700, longitude: 78.0000, address: 'Agra Fort Area, Agra' }, status: 'pending', createdAt: Date.now() - 86400000 * 0.1,
+          itemType: 'waste', wasteCategory: 'biodegradable', imageUrl: 'https://placehold.co/400x300/98fb98/000000?text=Food+Waste'
+        },
+      ];
+      setWasteListings(dummyListings);
+
+      // Check for a "logged in" user in sessionStorage (for persistence across refresh)
+      const storedUser = sessionStorage.getItem('currentUser');
+      if (storedUser) {
+        setCurrentUser(JSON.parse(storedUser));
+      } else {
+        // If no user is stored, default to no user logged in
+        setCurrentUser(null);
+      }
+      setLoading(false);
+    };
+
+    fetchInitialData();
   }, []);
 
-  useEffect(() => {
-    // Persist data to local storage (for hackathon demo persistence)
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    localStorage.setItem('wasteListings', JSON.stringify(wasteListings));
-    localStorage.setItem('users', JSON.stringify(users));
-  }, [currentUser, wasteListings, users]);
-
   const login = async (email: string, password: string): Promise<boolean> => {
-    setLoading(true);
+    setLoading(true); // Indicate loading for login process
     await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API call
-    const userFound = users.find(u => u.email === email && password === 'password'); // Simple password check for mock
-    if (userFound) {
-      setCurrentUser(userFound);
-      setLoading(false);
-      return true;
-    }
-    setLoading(false);
-    return false;
-  };
 
-  const signup = async (userData: Omit<User, 'id'> & { password?: string }): Promise<boolean> => {
-    setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API call
-    if (users.some(u => u.email === userData.email)) {
+    const foundUser = users.find(u => u.email === email && password === 'password'); // Dummy password
+    if (foundUser) {
+      setCurrentUser(foundUser);
+      sessionStorage.setItem('currentUser', JSON.stringify(foundUser)); // Store user
       setLoading(false);
-      return false; // Email already in use
+      console.log('Login successful:', foundUser.name);
+      return true;
+    } else {
+      setLoading(false); // End loading even if login fails
+      console.log('Login failed: Invalid credentials');
+      return false;
     }
-    const newUser: User = { id: uuidv4(), ...userData };
-    setUsers(prev => [...prev, newUser]);
-    setCurrentUser(newUser); // Log in new user automatically
-    setLoading(false);
-    return true;
   };
 
   const logout = () => {
     setCurrentUser(null);
-    localStorage.removeItem('currentUser'); // Clear from storage
+    sessionStorage.removeItem('currentUser'); // Clear stored user
+    setLoading(false); // Reset loading state
+    console.log('User logged out.');
   };
 
-  const createWasteListing = async (newListing: Omit<WasteListing, 'id' | 'status' | 'createdAt' | 'userId'>): Promise<boolean> => {
-    setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    if (!currentUser) return false;
-    const listing: WasteListing = {
-      id: uuidv4(),
-      userId: currentUser.id,
-      status: 'pending',
+  const assignCollectorToListing = async (listingId: string, collectorId: string) => {
+    setWasteListings(prev => prev.map(l =>
+      l.id === listingId ? { ...l, status: 'assigned', assignedCollectorId: collectorId } : l
+    ));
+    await new Promise(resolve => setTimeout(resolve, 300));
+    console.log(`Listing ${listingId} assigned to collector ${collectorId}`);
+  };
+
+  const completeListing = async (listingId: string) => {
+    setWasteListings(prev => prev.map(l =>
+      l.id === listingId ? { ...l, status: 'completed', completedAt: Date.now() } : l
+    ));
+    await new Promise(resolve => setTimeout(resolve, 300));
+    console.log(`Listing ${listingId} marked as completed.`);
+  };
+
+  const createWasteListing = async (newListingPartial: Omit<WasteListing, 'id' | 'createdAt' | 'status' | 'comments' | 'assignedCollectorId' | 'completedAt'>): Promise<WasteListing> => {
+    const id = `wl${wasteListings.length + 1}-${Date.now()}`;
+    const fullListing: WasteListing = {
+      ...newListingPartial,
+      id,
       createdAt: Date.now(),
-      ...newListing,
+      status: 'pending', // Default status for new listings
+      comments: [], // Initialize comments array
+      assignedCollectorId: undefined,
+      completedAt: undefined,
     };
-    setWasteListings(prev => [listing, ...prev]); // Add to top
-    setLoading(false);
-    return true;
+    setWasteListings(prev => [...prev, fullListing]);
+    await new Promise(resolve => setTimeout(resolve, 300));
+    console.log('Waste listing created:', fullListing);
+    return fullListing;
   };
 
-  const assignCollectorToListing = async (listingId: string, collectorId: string): Promise<boolean> => {
+  const addCommentToListing = async (listingId: string, newCommentPartial: Omit<Comment, 'id' | 'createdAt'>) => {
+    const commentId = `comm${Date.now()}`;
+    const fullComment: Comment = {
+      ...newCommentPartial,
+      id: commentId,
+      createdAt: Date.now(),
+    };
+
+    setWasteListings(prev =>
+      prev.map(listing =>
+        listing.id === listingId
+          ? { ...listing, comments: [...(listing.comments || []), fullComment] }
+          : listing
+      )
+    );
+    await new Promise(resolve => setTimeout(resolve, 200));
+    console.log(`Comment added to listing ${listingId}:`, fullComment);
+  };
+
+
+  // Dummy signup function implementation
+  const signup = async (user: Omit<User, 'id'>): Promise<boolean> => {
     setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    setWasteListings(prev => prev.map(listing =>
-      listing.id === listingId
-        ? { ...listing, status: 'assigned', assignedCollectorId: collectorId }
-        : listing
-    ));
+    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API call
+    // Check if email already exists
+    if (users.some(u => u.email === user.email)) {
+      setLoading(false);
+      console.log('Signup failed: Email already exists');
+      return false;
+    }
+    const newUser: User = {
+      ...user,
+      id: `user${users.length + 1}-${Date.now()}`,
+    };
+    setUsers(prev => [...prev, newUser]);
+    setCurrentUser(newUser);
+    sessionStorage.setItem('currentUser', JSON.stringify(newUser));
     setLoading(false);
+    console.log('Signup successful:', newUser.name);
     return true;
   };
 
-  const completeListing = async (listingId: string): Promise<boolean> => {
-    setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    setWasteListings(prev => prev.map(listing =>
-      listing.id === listingId
-        ? { ...listing, status: 'completed' }
-        : listing
-    ));
-    setLoading(false);
-    return true;
-  };
-
-
-  // Adjust your DataContextType in types/index.ts to match these functions
   const value: DataContextType = {
     currentUser,
     loading,
     wasteListings,
-    users, // Provide users array
+    users,
     login,
     signup,
     logout,
-    createWasteListing,
     assignCollectorToListing,
     completeListing,
+    createWasteListing,
+    addCommentToListing,
   };
 
   return (
@@ -147,12 +212,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       {children}
     </DataContext.Provider>
   );
-}
+};
 
-export function useData() {
+export const useData = () => {
   const context = useContext(DataContext);
   if (context === undefined) {
     throw new Error('useData must be used within a DataProvider');
   }
   return context;
-}
+};
