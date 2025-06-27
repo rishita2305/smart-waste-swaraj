@@ -4,9 +4,35 @@
   padding-bottom: 4rem; /* Space at the bottom */
 }
 
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.heroTitle {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  animation: fadeSlideUp 1s ease-out forwards;
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  animation: fadeSlideUp 1.2s ease-out forwards;
+}
+
+
+
 /* Hero Section */
 .heroSection {
-  background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
+  background: linear-gradient(135deg, #007bff, #28a745);
   color: white;
   text-align: center;
   padding: 5rem 1rem;
