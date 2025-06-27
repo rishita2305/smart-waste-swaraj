@@ -1,25 +1,26 @@
 // src/app/page.tsx
-'use client';
+'use client'; // This directive is necessary for client-side functionality if other parts use hooks
 
 import Link from 'next/link';
 import { FaRecycle, FaMapMarkedAlt, FaLeaf, FaQuestionCircle, FaEnvelope, FaBolt } from 'react-icons/fa';
-import styles from './landing-page.module.css'; // Import module CSS
+import styles from './landing-page.module.css'; // Import your module CSS for the landing page
+// No need for useState and useEffect if the typing animation is removed
+// import { useEffect, useState } from 'react'; // REMOVED
 
 export default function LandingPage() {
+  // Removed animatedHeroTitle state and useEffect as typing animation is no longer desired
+  const fullHeroTitle = 'Revolutionizing Waste Management for a Cleaner India';
+
   return (
-
-    
     <div className={styles.landingPageContainer}>
-
       {/* Hero Section */}
       <section
         className={styles.heroSection}
-        style={{ backgroundImage: 'url("/waste-hero-bg.jpg")' }}
       >
         <div className={styles.heroOverlay}></div>
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>
-            Revolutionizing Waste Management for a Cleaner India
+            {fullHeroTitle} {/* Render the full title instantly */}
           </h1>
           <p className={styles.heroSubtitle}>
             Connect waste generators with collectors for efficient, sustainable waste disposal.
@@ -39,10 +40,7 @@ export default function LandingPage() {
           <div className={styles.aboutContent}>
             <div className={styles.aboutImageWrapper}>
               <img
-
-                src=" /waste-sorting.jpg  "
-
-               
+                src="/waste-sorting.jpg" // Ensure this image exists in your public folder
                 alt="Waste Sorting"
                 className={styles.aboutImage}
               />
@@ -83,6 +81,7 @@ export default function LandingPage() {
               <FaRecycle className={styles.benefitIcon} style={{ color: '#8a2be2' /* Custom purple */ }} />
               <h3 className={styles.benefitTitle}>Sustainable Future</h3>
               <p className={styles.benefitDescription}>Support a circular economy and promote responsible waste management practices.</p>
+            {/* Note: This is an example of custom color in inline style, ideally define in CSS variables */}
             </div>
           </div>
         </div>

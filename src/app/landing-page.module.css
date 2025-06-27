@@ -1,324 +1,543 @@
 /* src/app/landing-page.module.css */
 
+/* --- Root Variables --- */
+:root {
+  --status-pending: #FFC107;   /* Orange/Yellow */
+  --status-assigned: #2196F3;  /* Blue */
+  --status-completed: #4CAF50; /* Green */
+  --color-dark: #333; /* General dark text/element color */
+  --color-primary: #4CAF50; /* Main green for actions */
+  --color-secondary: #FFC107; /* Yellow/Orange for highlights/accents */
+  --color-accent: #2196F3; /* Blue for interactive elements */
+  --text-light: #f4f4f4; /* Light text color */
+  --bg-light: #f8f9fa; /* Light background */
+  --color-danger: #dc3545; /* Red for errors/removals */
+  --color-text-muted: #6c757d; /* Muted text color */
+  --color-text-body: #495057; /* Body text color */
+
+  /* Optional: Define fonts if not using next/font directly in layout.tsx */
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Lato', sans-serif;
+}
+
+/* --- General Container for the entire landing page --- */
 .landingPageContainer {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100vh; /* Ensures it takes at least full viewport height */
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
-/* --- Hero Section --- */
+/* --- Hero Section Styling --- */
 .heroSection {
-  position: relative;
-  height: calc(100vh - 80px); /* Adjust based on your Navbar height */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: white;
+  background-image: url('/waste-hero-bg.jpg'); /* Your waste-related background image */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  overflow: hidden; /* Ensure overlay doesn't spill */
+  color: white; /* Text color for content within hero */
+  text-align: center;
+  padding: 150px 20px; /* Vertical padding */
+  position: relative; /* For overlay and content positioning */
+  min-height: 70vh; /* Minimum height for the hero section */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
 }
 
 .heroOverlay {
+  content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(to right, rgba(0, 123, 255, 0.8) /* primary */, rgba(40, 167, 69, 0.8) /* secondary */);
-  z-index: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4); /* Lighter overlay (40% opacity) to show more background */
+  z-index: 1; /* Place overlay above background image */
 }
 
 .heroContent {
   position: relative;
-  z-index: 10;
-  padding: 2rem;
-  max-width: 960px;
+  z-index: 2; /* Ensure content is above the overlay */
+  max-width: 900px;
+  margin: 0 auto;
 }
 
+/* Animated Hero Title (Text Shadow Animated) */
 .heroTitle {
-  font-size: 3.5rem; /* Equivalent to text-5xl md:text-6xl */
-  font-weight: bold;
-  margin-bottom: 1.5rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-heading);
+  font-size: clamp(2.2em, 5vw, 4em); /* Adjusted font size for better impact */
+  font-weight: 800; /* Extra bold */
+  margin-bottom: 25px;
   line-height: 1.2;
+  color: white; /* Ensure text is white */
+  /* Stronger initial text shadow for readability */
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.9), 4px 4px 12px rgba(0,0,0,0.7);
+  animation: pulseShadow 2s infinite alternate ease-in-out; /* Apply the new shadow animation */
+}
+
+/* Keyframes for the Pulse Shadow animation */
+@keyframes pulseShadow {
+  from {
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.9), 4px 4px 12px rgba(0,0,0,0.7);
+  }
+  to {
+    text-shadow: 3px 3px 12px rgba(0,0,0,1), 6px 6px 18px rgba(0,0,0,0.9), 0 0 20px rgba(255,255,255,0.2); /* A subtle glow and expansion */
+  }
 }
 
 .heroSubtitle {
-  font-size: 1.5rem; /* Equivalent to text-xl md:text-2xl */
-  margin-bottom: 2rem;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+  font-family: var(--font-body);
+  font-size: clamp(1.2em, 2.5vw, 1.7em); /* Slightly larger for readability */
+  margin-bottom: 40px;
+  line-height: 1.5; /* Improved line height */
+  color: white; /* Ensure text is white */
+  /* Clear text shadow for readability */
+  text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
 }
 
-.getStartedButton {
-  background-color: var(--color-accent);
-  color: white;
-  font-weight: bold;
-  padding: 0.75rem 2rem;
-  border-radius: 9999px; /* full rounded */
-  font-size: 1.125rem; /* text-lg md:text-xl */
-  transition: all 0.3s ease;
-  transform: scale(1);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05); /* shadow-lg */
+/* --- General Content Section Styling (for reusable components like .container, .sectionTitle) --- */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-.getStartedButton:hover {
-  background-color: #e6b100; /* Darker yellow */
-  transform: scale(1.05);
+.sectionTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8em, 4vw, 3em);
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 50px;
+  color: var(--color-dark);
+  position: relative;
+  padding-bottom: 15px;
 }
 
-.buttonIcon {
-  margin-right: 0.5rem;
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background-color: var(--color-primary);
+  border-radius: 2px;
 }
 
 /* --- About Us Section --- */
 .aboutUsSection {
-  padding-top: 4rem;
-  padding-bottom: 4rem;
-  background-color: white;
-  text-align: center;
-}
-
-.sectionTitle {
-  font-size: 2.25rem; /* text-4xl */
-  font-weight: bold;
-  color: var(--color-primary);
-  margin-bottom: 3rem;
+  padding: 80px 0;
+  background-color: var(--bg-light);
 }
 
 .aboutContent {
   display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  flex-wrap: wrap; /* Allows wrapping on smaller screens */
+  gap: 40px;
   align-items: center;
+  justify-content: center; /* Center items when wrapped */
 }
 
 .aboutImageWrapper {
-  width: 100%;
+  flex: 1;
+  min-width: 300px; /* Minimum width before wrapping */
+  max-width: 500px; /* Max width to prevent image from being too large */
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15); /* Keep box shadow on images/cards */
 }
 
 .aboutImage {
-  border-radius: 0.5rem; /* rounded-lg */
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05); /* shadow-xl */
   width: 100%;
   height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.aboutImage:hover {
+  transform: scale(1.05); /* Zoom effect on hover */
 }
 
 .aboutText {
-  width: 100%;
-  text-align: left;
+  flex: 1.5; /* Takes more space than image */
+  min-width: 300px;
+  max-width: 600px; /* Max width for text block */
+  font-family: var(--font-body);
+  color: var(--color-text-body);
 }
 
 .aboutParagraph {
-  font-size: 1.125rem; /* text-lg */
-  color: var(--color-text-body);
-  margin-bottom: 1rem;
+  font-size: 1.1em;
+  line-height: 1.7;
+  margin-bottom: 20px;
 }
 
-.exploreMapButton {
-  margin-top: 1.5rem;
-  display: inline-block;
-  background-color: var(--color-secondary);
+.getStartedButton, .exploreMapButton {
+  background-color: var(--color-primary); /* Use primary color for main buttons */
   color: white;
+  padding: 18px 35px;
+  border-radius: 50px; /* Pill shape */
+  font-size: 1.2em;
   font-weight: bold;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem; /* rounded-lg */
-  transition: background-color 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+  text-decoration: none;
+  display: inline-flex; /* For icon alignment */
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(var(--color-primary), 0.4); /* Keep button shadows */
+}
+
+.getStartedButton:hover, .exploreMapButton:hover {
+  background-color: color-mix(in srgb, var(--color-primary) 85%, black);
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(var(--color-primary), 0.5);
+}
+
+.buttonIcon {
+  font-size: 1.3em;
+}
+
+.exploreMapButton { /* Specific override if needed for map button */
+  background-color: var(--color-accent); /* Use accent color for map button */
+  box-shadow: 0 3px 10px rgba(var(--color-accent), 0.3);
 }
 
 .exploreMapButton:hover {
-  background-color: #1e7e34; /* Darker green */
+  background-color: color-mix(in srgb, var(--color-accent) 85%, black);
+  box-shadow: 0 5px 12px rgba(var(--color-accent), 0.4);
 }
+
 
 /* --- Benefits Section --- */
 .benefitsSection {
-  padding-top: 4rem;
-  padding-bottom: 4rem;
-  background-color: var(--color-light); /* bg-gray-100 */
-  text-align: center;
+  padding: 80px 0;
+  background-color: white;
 }
 
 .benefitsGrid {
   display: grid;
-  grid-template-columns: 1fr; /* Default to single column */
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  justify-content: center;
 }
 
 .benefitCard {
-  background-color: white;
-  padding: 1.5rem;
-  border-radius: 0.5rem; /* rounded-lg */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
-  transition: box-shadow 0.2s ease;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); /* Keep box shadow on benefit cards */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #eee;
 }
 
 .benefitCard:hover {
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* hover:shadow-lg */
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
 .benefitIcon {
-  font-size: 3.125rem; /* text-5xl */
-  margin-bottom: 1rem;
-  margin-left: auto;
-  margin-right: auto;
-  display: block; /* To center with margin auto */
+  font-size: 3.5em;
+  margin-bottom: 20px;
+  color: var(--color-primary); /* Default icon color */
 }
 
 .benefitTitle {
-  font-size: 1.25rem; /* text-xl */
-  font-weight: 600;
-  color: var(--color-text-body);
-  margin-bottom: 0.5rem;
+  font-family: var(--font-heading);
+  font-size: 1.5em;
+  font-weight: 700;
+  color: var(--color-dark);
+  margin-bottom: 15px;
 }
 
 .benefitDescription {
-  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: 1em;
+  color: var(--color-text-body);
+  line-height: 1.6;
 }
 
 /* --- FAQ Section --- */
 .faqSection {
-  padding-top: 4rem;
-  padding-bottom: 4rem;
-  background-color: white;
+  padding: 80px 0;
+  background-color: var(--bg-light);
 }
 
 .faqList {
-  max-width: 768px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 800px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 15px;
 }
 
 .faqItem {
-  background-color: #f8f9fa; /* bg-gray-50 */
-  padding: 1rem;
-  border-radius: 0.5rem; /* rounded-lg */
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* shadow-sm */
-  cursor: pointer;
-  border: 1px solid #dee2e6; /* border border-gray-200 */
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Keep box shadow on FAQ items */
+  transition: box-shadow 0.3s ease;
+}
+
+.faqItem[open] {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .faqSummary {
-  font-weight: 600;
-  font-size: 1.125rem; /* text-lg */
-  color: var(--color-text-body);
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  padding: 18px 25px;
+  font-family: var(--font-heading);
+  font-size: 1.15em;
+  font-weight: 600;
+  color: var(--color-dark);
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+}
+
+.faqSummary::marker {
+  display: none;
+}
+
+.faqSummary::before {
+  content: '+';
+  display: inline-block;
+  margin-right: 15px;
+  font-size: 1.5em;
+  line-height: 1;
+  color: var(--color-primary);
+  transition: transform 0.2s ease;
+}
+
+.faqItem[open] .faqSummary::before {
+  content: '−';
+  transform: rotate(0deg);
 }
 
 .faqIcon {
-  margin-left: 0.5rem;
+  font-size: 1.3em;
+  color: var(--color-secondary);
 }
 
 .faqAnswer {
-  margin-top: 0.5rem;
-  color: var(--color-text-muted);
-  padding-left: 2rem;
+  font-family: var(--font-body);
+  font-size: 1em;
+  color: var(--color-text-body);
+  padding: 0 25px 20px;
+  line-height: 1.6;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out, padding 0.4s ease-out;
 }
 
-/* --- Contact Us Section --- */
+.faqItem[open] .faqAnswer {
+  max-height: 200px;
+  padding-top: 10px;
+}
+
+
+/* --- Contact Section --- */
 .contactSection {
-  padding-top: 4rem;
-  padding-bottom: 4rem;
-  background-color: var(--color-light); /* bg-gray-100 */
+  padding: 80px 0;
+  background-color: white;
   text-align: center;
 }
 
 .contactSubtitle {
-  font-size: 1.125rem; /* text-lg */
+  font-family: var(--font-body);
+  font-size: 1.2em;
   color: var(--color-text-body);
-  margin-bottom: 2rem;
+  margin-bottom: 40px;
 }
 
 .contactLinks {
   display: flex;
   justify-content: center;
-  align-items: center;
-  gap: 2rem;
+  flex-wrap: wrap;
+  gap: 30px;
 }
 
 .contactLink {
-  font-size: 1.5rem; /* text-2xl */
-  color: var(--color-secondary);
-  display: flex;
+  background-color: var(--color-accent); /* Blue */
+  color: white;
+  padding: 15px 30px;
+  border-radius: 50px;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(var(--color-accent), 0.3); /* Keep box shadow on links */
 }
 
 .contactLink:hover {
-  color: #0056b3; /* Darker blue, similar to hover for primary */
+  background-color: color-mix(in srgb, var(--color-accent) 85%, black);
+  transform: translateY(-4px);
+  box-shadow: 0 6px 15px rgba(var(--color-accent), 0.4);
 }
 
-/* --- Footer --- */
+/* --- Footer Styling --- */
 .footer {
-  background-color: var(--color-dark);
-  color: white;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  background-color: var(--color-dark); /* Dark background */
+  color: var(--text-light);
+  padding: 30px 0;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.95em;
+  margin-top: auto; /* Pushes footer to the bottom */
 }
 
-.footer p {
-  text-align: center;
+.footer .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
 }
 
 .footerLinks {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 20px;
 }
 
 .footerLink {
-  font-size: 0.875rem; /* text-sm */
+  color: var(--text-light);
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 .footerLink:hover {
-  text-decoration: underline;
+  color: var(--color-primary); /* Green on hover */
 }
 
-/* --- Media Queries --- */
-@media (min-width: 768px) { /* md breakpoint */
-  .aboutContent {
-    flex-direction: row;
+/* --- Responsive Media Queries --- */
+@media (max-width: 1024px) {
+  .heroSection {
+    padding: 120px 20px;
+    min-height: 60vh;
   }
-  .aboutImageWrapper,
-  .aboutText {
-    width: 50%;
-  }
-
-  .benefitsGrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 767px) { /* Styles for smaller screens */
   .heroTitle {
-    font-size: 2.5rem; /* Adjust for mobile */
+    font-size: clamp(1.8em, 6vw, 3.2em);
   }
   .heroSubtitle {
-    font-size: 1.125rem;
+    font-size: clamp(1em, 3vw, 1.4em);
   }
   .getStartedButton {
-    font-size: 1rem;
-    padding: 0.625rem 1.25rem;
+    padding: 15px 30px;
+    font-size: 1.1em;
+  }
+  .aboutContent {
+    flex-direction: column;
+    text-align: center;
+  }
+  .aboutImageWrapper, .aboutText {
+    min-width: unset;
+    width: 100%;
+  }
+  .benefitsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .heroSection {
+    padding: 100px 15px;
+    min-height: 50vh;
+  }
+  .heroTitle {
+    font-size: clamp(1.6em, 7vw, 2.8em);
+  }
+  .heroSubtitle {
+    font-size: clamp(0.95em, 4vw, 1.2em);
+  }
+  .getStartedButton {
+    padding: 12px 25px;
+    font-size: 1em;
   }
   .sectionTitle {
-    font-size: 2rem;
+    font-size: clamp(1.6em, 5vw, 2.5em);
+    margin-bottom: 40px;
   }
   .aboutParagraph {
-    font-size: 1rem;
+    font-size: 1em;
   }
-  .contactLinks {
-    flex-direction: column;
-    gap: 1rem;
+  .exploreMapButton {
+    padding: 12px 20px;
+    font-size: 0.9em;
+  }
+  .benefitCard {
+    padding: 25px;
+  }
+  .benefitIcon {
+    font-size: 3em;
+  }
+  .benefitTitle {
+    font-size: 1.3em;
+  }
+  .faqSummary {
+    font-size: 1.05em;
+    padding: 15px 20px;
+  }
+  .faqAnswer {
+    padding: 0 20px 15px;
+  }
+  .contactSubtitle {
+    font-size: 1.1em;
   }
   .contactLink {
-    font-size: 1.25rem;
+    padding: 12px 25px;
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroSection {
+    padding: 80px 10px;
+    min-height: 45vh;
+  }
+  .heroTitle {
+    font-size: clamp(1.4em, 9vw, 2.5em);
+  }
+  .heroSubtitle {
+    font-size: clamp(0.9em, 5vw, 1.1em);
+  }
+  .getStartedButton {
+    padding: 10px 20px;
+    font-size: 0.9em;
+    gap: 8px;
+  }
+  .buttonIcon {
+    font-size: 1em;
+  }
+  .sectionTitle {
+    font-size: clamp(1.4em, 6vw, 2em);
+    margin-bottom: 30px;
+  }
+  .benefitsGrid {
+    grid-template-columns: 1fr; /* Single column */
+  }
+  .faqSummary {
+    font-size: 1em;
+    padding: 12px 18px;
+  }
+  .contactLink {
+    flex-direction: column; /* Stack contact links */
+    padding: 15px 20px;
+    gap: 5px;
+  }
+  .footer .container {
+    gap: 10px;
+  }
+  .footerLinks {
+    flex-direction: column;
+    gap: 10px;
   }
 }

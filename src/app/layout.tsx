@@ -1,7 +1,25 @@
 // src/app/layout.tsx
-import './globals.css'; // Your global styles should be imported here
-import Navbar from '../components/layout/Navbar'; // Correct path to your Navbar component
-import { DataProvider } from '../contexts/DataContext'; // Ensure DataProvider wraps components that use DataContext
+import './globals.css';
+import Navbar from '../components/layout/Navbar';
+import { DataProvider } from '../contexts/DataContext';
+// Import the fonts you want to use
+import { Montserrat, Lato } from 'next/font/google';
+
+// Configure Montserrat font
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['400', '600', '700', '800'], // Include weights used in your CSS
+  variable: '--font-heading', // Matches the CSS variable
+  display: 'swap', // Optimizes font loading
+});
+
+// Configure Lato font
+const lato = Lato({
+  subsets: ['latin'],
+  weight: ['400', '700'], // Include weights used in your CSS
+  variable: '--font-body', // Matches the CSS variable
+  display: 'swap',
+});
 
 export const metadata = {
   title: 'Smart Waste Swaraj',
@@ -14,13 +32,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${montserrat.variable} ${lato.variable}`}>
       <body>
-        {/* Wrap components that use DataContext with DataProvider */}
         <DataProvider>
-          {/* Navbar should be rendered here to appear on all pages */}
           <Navbar />
-          {/* All page content (including src/app/page.tsx) will be rendered inside <main> */}
           <main>{children}</main>
           {/* You might also have a Footer component here if applicable */}
         </DataProvider>
