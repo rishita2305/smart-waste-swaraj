@@ -39,7 +39,11 @@ export default function LandingPage() {
           <div className={styles.aboutContent}>
             <div className={styles.aboutImageWrapper}>
               <img
+<<<<<<< HEAD
                 src=" /waste-sorting.jpg  "
+=======
+                src="/Waste-Management.jpg"
+>>>>>>> 956f428949a9019d85714c4d992bb37a7d7986ee
                 alt="Waste Sorting"
                 className={styles.aboutImage}
               />
