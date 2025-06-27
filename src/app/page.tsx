@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 
 export default function LandingPage() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
-  const fullHeroTitle = "Revolutionizing Waste Management for a Cleaner India"; // Define your hero title here
+  const fullHeroTitle = "Smart Waste Swaraj"; // Define your hero title here
 
   const toggleFAQ = (index: number) => {
     setOpenFAQ(openFAQ === index ? null : index);
@@ -19,6 +19,8 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section
         className={styles.heroSection}
+        // Style can be inline or via module CSS if background-image changes dynamically
+        // style={{ backgroundImage: `url('/waste-hero-bg.jpg')` }} // Make sure this image path is correct
       >
         <div className={styles.heroOverlay}></div>
         <div className={styles.heroContent}>

@@ -135,7 +135,7 @@
 .aboutContent {
   display: flex;
   flex-wrap: wrap; /* Allows wrapping on smaller screens */
-  gap: 40px;
+  gap: 20px; /* ADJUSTED GAP: Reduced to 20px */
   align-items: center;
   justify-content: center; /* Center items when wrapped */
 }
@@ -364,12 +364,12 @@
 .faqAnswerWrapper {
   max-height: 0; /* Initially hidden */
   overflow: hidden;
-  transition: max-height 0.5s ease-out, padding 0.5s ease-out; /* Slower, smoother transition */
+  transition: max-height 0.2s ease-out, padding 0.2s ease-out; /* **UPDATED: Even faster transition (0.2s)** */
   padding: 0 25px; /* Horizontal padding */
 }
 
 .faqAnswerWrapper.faqAnswerOpen {
-  max-height: 1000px; /* INCREASED to ensure full content visibility, adjust if needed for extremely long answers */
+  max-height: 1000px; /* Ensures full content visibility for long answers */
   padding-bottom: 20px; /* Add bottom padding when open */
 }
 
