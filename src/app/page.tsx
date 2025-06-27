@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 
 export default function LandingPage() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
-  const fullHeroTitle = "Smart Waste Swaraj"; // Define your hero title here
+  const fullHeroTitle = "Revolutionizing Waste Management for a Cleaner India"; // Define your hero title here
 
   const toggleFAQ = (index: number) => {
     setOpenFAQ(openFAQ === index ? null : index);
@@ -134,11 +134,12 @@ export default function LandingPage() {
                     {openFAQ === index ? <FaMinus /> : <FaPlus />}
                   </div>
                 </button>
-                {openFAQ === index && (
+                {/* THIS IS THE CRUCIAL WRAPPER FOR SMOOTH ANIMATION */}
+                <div className={`${styles.faqAnswerWrapper} ${openFAQ === index ? styles.faqAnswerOpen : ''}`}>
                   <div className={styles.faqAnswer}>
                     <p>{item.answer}</p>
                   </div>
-                )}
+                </div>
               </div>
             ))}
           </div>

@@ -261,83 +261,128 @@
 
 /* --- FAQ Section --- */
 .faqSection {
-  padding: 80px 0;
-  background-color: var(--bg-light);
+  padding: 80px 0; /* Use consistent padding */
+  background-color: var(--bg-light); /* Consistent background color */
 }
 
-.faqList {
-  max-width: 800px;
+.faqSectionTitle {
+  /* Inherits from .sectionTitle for consistency but can override color */
+  font-family: var(--font-heading);
+  font-size: clamp(1.8em, 4vw, 3em);
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 50px; /* Consistent margin-bottom */
+  color: var(--color-dark); /* Using general dark color, or specify green if desired: #4CAF50 */
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.faqSectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background-color: var(--color-primary);
+  border-radius: 2px;
+}
+
+.faqContainer {
+  max-width: 800px; /* Slightly wider container for FAQs */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 15px; /* Consistent gap */
 }
 
 .faqItem {
   background-color: white;
   border: 1px solid #ddd;
   border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Keep box shadow on FAQ items */
-  transition: box-shadow 0.3s ease;
+  overflow: hidden; /* CRUCIAL for smooth max-height animation */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Consistent box shadow */
 }
 
-.faqItem[open] {
+.faqItemActive { /* Class added by JS when FAQ is open */
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  background-color: rgba(103, 173, 91, 0.08); /* Light green tint for active item */
 }
 
-.faqSummary {
+.faqQuestion {
+  width: 100%;
+  padding: 18px 25px; /* Ample padding for click area */
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 25px;
-  font-family: var(--font-heading);
-  font-size: 1.15em;
+  font-family: var(--font-heading); /* Consistent font */
+  font-size: 1.15em; /* Larger font size */
   font-weight: 600;
   color: var(--color-dark);
-  cursor: pointer;
-  outline: none;
-  user-select: none;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-.faqSummary::marker {
-  display: none;
+.faqQuestion:hover {
+  background-color: #f1f3f5; /* Light hover background */
 }
 
-.faqSummary::before {
-  content: '+';
-  display: inline-block;
+.faqQuestionActive {
+  color: var(--color-primary); /* Primary green for active question text */
+}
+
+.faqQuestionText {
+  flex-grow: 1;
   margin-right: 15px;
-  font-size: 1.5em;
-  line-height: 1;
-  color: var(--color-primary);
-  transition: transform 0.2s ease;
-}
-
-.faqItem[open] .faqSummary::before {
-  content: '−';
-  transform: rotate(0deg);
+  line-height: 1.3;
 }
 
 .faqIcon {
-  font-size: 1.3em;
-  color: var(--color-secondary);
+  flex-shrink: 0;
+  width: 28px; /* Larger icon size */
+  height: 28px;
+  border-radius: 50%;
+  background-color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-size: 15px; /* Icon symbol size */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.faqQuestionActive .faqIcon {
+  background-color: var(--color-primary); /* Green background for active icon */
+  color: white;
+}
+
+/* NEW: Wrapper for the answer content to enable smooth height animation */
+.faqAnswerWrapper {
+  max-height: 0; /* Initially hidden */
+  overflow: hidden;
+  transition: max-height 0.5s ease-out, padding 0.5s ease-out; /* Slower, smoother transition */
+  padding: 0 25px; /* Horizontal padding */
+}
+
+.faqAnswerWrapper.faqAnswerOpen {
+  max-height: 1000px; /* INCREASED to ensure full content visibility, adjust if needed for extremely long answers */
+  padding-bottom: 20px; /* Add bottom padding when open */
 }
 
 .faqAnswer {
+  /* This now styles only the text content within the wrapper */
   font-family: var(--font-body);
   font-size: 1em;
   color: var(--color-text-body);
-  padding: 0 25px 20px;
   line-height: 1.6;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease-out, padding 0.4s ease-out;
 }
 
-.faqItem[open] .faqAnswer {
-  max-height: 200px;
-  padding-top: 10px;
+.faqAnswer p {
+  margin: 0; /* Remove default paragraph margin */
 }
 
 
@@ -445,6 +490,21 @@
   .benefitsGrid {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
+
+  /* FAQ Responsive */
+  .faqQuestion {
+    font-size: 1.05em;
+    padding: 15px 20px;
+  }
+  .faqAnswerWrapper {
+    padding: 0 20px;
+  }
+  .faqAnswerWrapper.faqAnswerOpen {
+    padding-bottom: 15px;
+  }
+  .faqAnswer {
+    font-size: 0.95em;
+  }
 }
 
 @media (max-width: 768px) {
@@ -482,19 +542,28 @@
   .benefitTitle {
     font-size: 1.3em;
   }
-  .faqSummary {
-    font-size: 1.05em;
-    padding: 15px 20px;
+
+  /* FAQ Responsive */
+  .faqSectionTitle {
+    font-size: clamp(1.6em, 5vw, 2.5em); /* Consistent with other section titles */
+  }
+  .faqQuestion {
+    font-size: 1em;
+    padding: 12px 18px;
+  }
+  .faqIcon {
+    width: 25px;
+    height: 25px;
+    font-size: 14px;
+  }
+  .faqAnswerWrapper {
+    padding: 0 18px;
+  }
+  .faqAnswerWrapper.faqAnswerOpen {
+    padding-bottom: 12px;
   }
   .faqAnswer {
-    padding: 0 20px 15px;
-  }
-  .contactSubtitle {
-    font-size: 1.1em;
-  }
-  .contactLink {
-    padding: 12px 25px;
-    font-size: 1em;
+    font-size: 0.9em;
   }
 }
 
@@ -524,10 +593,6 @@
   .benefitsGrid {
     grid-template-columns: 1fr; /* Single column */
   }
-  .faqSummary {
-    font-size: 1em;
-    padding: 12px 18px;
-  }
   .contactLink {
     flex-direction: column; /* Stack contact links */
     padding: 15px 20px;
@@ -540,142 +605,24 @@
     flex-direction: column;
     gap: 10px;
   }
-}
-.faqSection {
-  padding: 60px 0;
-  background-color: #f8f9fa;
-}
 
-.faqSectionTitle {
-  font-size: 2rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 30px;
-  color: rgb(103, 173, 91);
-}
-
-.faqContainer {
-  max-width: 700px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 12px; /* reduced gap */
-}
-
-.faqItem {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.faqItem.faqItemActive {
-  background-color: rgba(103, 173, 91, 0.08);
-}
-
-.faqQuestion {
-  width: 100%;
-  padding: 10px 24px;
-  background: none;
-  border: none;
-  text-align: left;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #374151;
-  transition: background 0.3s ease;
-}
-
-.faqQuestion:hover {
-  background-color: #f1f3f5;
-}
-
-.faqQuestionActive {
-  color: rgb(103, 173, 91);
-}
-
-.faqQuestionText {
-  flex-grow: 1;
-  margin-right: 12px;
-  line-height: 1.3;
-}
-
-.faqIcon {
-  flex-shrink: 0;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background-color: #e5e7eb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #6b7280;
-  font-size: 13px;
-}
-
-.faqQuestionActive .faqIcon {
-  background-color: rgb(103, 173, 91);
-  color: white;
-}
-
-.faqAnswer {
-  padding: 0 24px 10px 24px;
-  color: #6b7280;
-  line-height: 1.5;
-  font-size: 0.95rem;
-  animation: fadeIn 0.25s ease-in-out;
-}
-
-.faqAnswer p {
-  margin: 0;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Responsive Tweaks */
-@media (max-width: 768px) {
-  .faqSectionTitle {
-    font-size: 1.75rem;
-  }
-
+  /* FAQ Responsive */
   .faqQuestion {
-    padding: 8px 20px;
-    font-size: 0.95rem;
+    font-size: 0.9em;
+    padding: 10px 15px;
   }
-
+  .faqIcon {
+    width: 22px;
+    height: 22px;
+    font-size: 13px;
+  }
+  .faqAnswerWrapper {
+    padding: 0 15px;
+  }
+  .faqAnswerWrapper.faqAnswerOpen {
+    padding-bottom: 10px;
+  }
   .faqAnswer {
-    padding: 0 20px 8px 20px;
-    font-size: 0.9rem;
-  }
-
-  .faqContainer {
-    margin: 0 12px;
-  }
-}
-
-@media (max-width: 480px) {
-  .faqQuestion {
-    padding: 6px 16px;
-  }
-
-  .faqAnswer {
-    padding: 0 16px 6px 16px;
-  }
-
-  .faqQuestionText {
-    margin-right: 10px;
+    font-size: 0.85em;
   }
 }
