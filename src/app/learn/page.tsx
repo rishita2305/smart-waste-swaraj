@@ -30,7 +30,73 @@ export default function LearnPage() {
         <div className={styles.cardGrid}>
           <div className={styles.card}>
             <Image
-              src="/waste.png"
+              src="/zero-waste.jpg"
+              alt="Zero Waste Lifestyle"
+              width={400}
+              height={250}
+              className={styles.cardImage}
+            />
+            <h3 className={styles.cardTitle}>Zero Waste Lifestyle</h3>
+            <p className={styles.cardDescription}>
+              Learn how to reduce your household waste and embrace a minimal
+              waste lifestyle.
+            </p>
+            <Link
+              href="https://www.zerowastehome.com/"
+              target="_blank"
+              className={styles.cardButton}
+            >
+              Explore Tips <FaRecycle />
+            </Link>
+          </div>
+
+          <div className={styles.card}>
+            <Image
+              src="/e waste.jpeg"
+              alt="E-Waste Management"
+              width={400}
+              height={250}
+              className={styles.cardImage}
+            />
+            <h3 className={styles.cardTitle}>Understanding E-Waste</h3>
+            <p className={styles.cardDescription}>
+              Electronic waste is rising fast. Learn how to safely recycle and
+              dispose of e-waste.
+            </p>
+            <Link
+              href="https://www.geeksforgeeks.org/computer-science-fundamentals/what-is-e-waste/"
+              target="_blank"
+              className={styles.cardButton}
+            >
+              Learn More <FaLightbulb />
+            </Link>
+          </div>
+
+          <div className={styles.card}>
+            <Image
+              src="/circular economy.png"
+              alt="Circular Economy"
+              width={400}
+              height={250}
+              className={styles.cardImage}
+            />
+            <h3 className={styles.cardTitle}>Intro to Circular Economy</h3>
+            <p className={styles.cardDescription}>
+              Discover how circular systems reduce waste and make businesses
+              more sustainable.
+            </p>
+            <Link
+              href="https://ellenmacarthurfoundation.org/topics/circular-economy-introduction/overview"
+              target="_blank"
+              className={styles.cardButton}
+            >
+              Read Article <FaTree />
+            </Link>
+          </div>
+
+          <div className={styles.card}>
+            <Image
+              src="/waste segregation.jpg"
               alt="Waste Segregation Guide"
               width={400}
               height={250}
