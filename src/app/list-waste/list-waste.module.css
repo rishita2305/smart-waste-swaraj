@@ -1,0 +1,455 @@
+/* src/app/list-waste/list-waste.module.css */
+
+:root {
+  --color-primary: #4CAF50;
+  --color-secondary: #FFC107;
+  --color-accent: #2196F3;
+  --color-dark: #333;
+  --color-light: #f8f9fa;
+  --color-text-body: #495057;
+  --color-text-muted: #6c757d;
+  --color-danger: #dc3545;
+}
+
+.listWasteContainer {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 1.5rem 2rem;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  min-height: calc(100vh - 80px); /* Adjust for navbar height */
+}
+
+.listWasteTitle {
+  text-align: center;
+  font-size: 2.5rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.listWasteSubtitle {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.formLabel {
+  display: block;
+  font-size: 1rem;
+  color: var(--color-dark);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.formInput,
+.formSelect,
+.formTextarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--color-dark);
+  transition: all 0.3s ease;
+  box-sizing: border-box; /* Include padding in width */
+}
+
+.formInput:focus,
+.formSelect:focus,
+.formTextarea:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(var(--color-accent), 0.25);
+  outline: none;
+}
+
+.formTextarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.itemTypeSelection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.itemTypeButton {
+  flex: 1; /* Allows buttons to grow */
+  min-width: 180px; /* Minimum width for buttons */
+  background-color: var(--color-light);
+  color: var(--color-dark);
+  border: 1px solid #ddd;
+  padding: 0.8rem 1.2rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.itemTypeButton:hover {
+  background-color: #e9ecef;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.itemTypeButton.activeItemType {
+  background-color: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 8px rgba(var(--color-primary), 0.3);
+  transform: translateY(-1px);
+}
+
+.itemTypeButton.activeItemType .buttonIcon {
+  color: white;
+}
+
+.quantityInputGroup {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.quantityInputGroup .formInput {
+  flex-grow: 1;
+}
+
+.formSelectUnit {
+  padding: 0.8rem;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--color-dark);
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.priceInputGroup {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.priceInputGroup:focus-within {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(var(--color-accent), 0.25);
+  outline: none;
+}
+
+.priceCurrency {
+  color: var(--color-dark);
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.priceInputGroup .formInput {
+  border: none;
+  padding: 0;
+  outline: none;
+  box-shadow: none;
+}
+
+.optionalText {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-left: 0.5rem;
+  font-weight: normal;
+}
+
+.fileInput {
+  display: block;
+  width: 100%;
+  padding: 0.8rem 0; /* Adjust padding for file input */
+  font-size: 1rem;
+  color: var(--color-dark);
+}
+
+.imagePreviewContainer {
+  margin-top: 1rem;
+  text-align: center;
+  position: relative;
+}
+
+.imagePreview {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  max-height: 250px;
+  object-fit: contain; /* Ensure full image is visible */
+}
+
+.removeImageButton {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: var(--color-danger);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+}
+
+.removeImageButton:hover {
+  background-color: color-mix(in srgb, var(--color-danger) 80%, black);
+  transform: scale(1.1);
+}
+
+.inputHint {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.locationButton {
+  background-color: var(--color-accent);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.locationButton:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-accent) 80%, black);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.locationButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.locationInfoBox {
+  background-color: var(--color-light);
+  border: 1px solid var(--color-primary);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--color-dark);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.locationClearButton {
+  background: none;
+  border: none;
+  color: var(--color-danger);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  transition: all 0.3s ease;
+}
+
+.locationClearButton:hover {
+  color: color-mix(in srgb, var(--color-danger) 80%, black);
+  transform: scale(1.1);
+}
+
+.errorMessageText {
+  color: var(--color-danger);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  text-align: center;
+  background-color: #ffebee;
+  border: 1px solid #ef9a9a;
+  padding: 0.7rem;
+  border-radius: 5px;
+}
+
+.submitButton {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+  box-shadow: 0 4px 10px rgba(var(--color-primary), 0.3);
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-primary) 80%, black);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(var(--color-primary), 0.4);
+}
+
+.submitButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.buttonIcon, .spinner {
+  font-size: 1.2rem;
+}
+
+.spinner {
+  animation: spin 1.5s linear infinite;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px);
+  background-color: var(--color-light);
+  color: var(--color-dark);
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.loadingSpinner {
+  font-size: 3.5rem;
+  color: var(--color-primary);
+  animation: spin 1.5s linear infinite;
+}
+
+.loadingText {
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+  .listWasteContainer {
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+  .listWasteTitle {
+    font-size: 2rem;
+  }
+  .listWasteSubtitle {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .form {
+    gap: 1rem;
+  }
+  .formLabel {
+    font-size: 0.95rem;
+  }
+  .formInput, .formSelect, .formTextarea, .formSelectUnit {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  .itemTypeSelection {
+    flex-direction: column; /* Stack buttons on small screens */
+    gap: 0.8rem;
+  }
+  .itemTypeButton {
+    width: 100%; /* Full width for stacked buttons */
+    min-width: unset;
+    font-size: 0.95rem;
+    padding: 0.7rem 1rem;
+  }
+  .priceInputGroup {
+    padding: 0.6rem 0.8rem;
+  }
+  .priceCurrency {
+    font-size: 0.9rem;
+  }
+  .optionalText {
+    font-size: 0.8rem;
+  }
+  .inputHint {
+    font-size: 0.85rem;
+  }
+  .locationButton, .submitButton {
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+    gap: 0.6rem;
+  }
+  .locationInfoBox {
+    padding: 0.7rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  .removeImageButton {
+    width: 25px;
+    height: 25px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .listWasteTitle {
+    font-size: 1.8rem;
+  }
+  .listWasteSubtitle {
+    font-size: 0.9rem;
+  }
+  .formGroup {
+    margin-bottom: 0.8rem;
+  }
+  .formInput, .formSelect, .formTextarea, .formSelectUnit {
+    font-size: 0.85rem;
+  }
+  .itemTypeButton {
+    font-size: 0.9rem;
+  }
+  .locationButton, .submitButton {
+    font-size: 0.9rem;
+  }
+}

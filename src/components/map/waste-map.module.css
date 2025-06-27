@@ -1,102 +1,615 @@
 /* src/components/map/waste-map.module.css */
 
-.mapContainer {
-  height: 500px; /* Adjust as needed for your layout */
-  width: 100%;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* --- Root Variables (assuming these are in your globals.css or can be defined here) --- */
+/*
+If you don't have these in your global CSS, you can uncomment them here.
+It's generally better to define them once in globals.css or a dedicated theme file.
+*/
+:root {
+  --status-pending: #FFC107;   /* Orange/Yellow */
+  --status-assigned: #2196F3;  /* Blue */
+  --status-completed: #4CAF50; /* Green */
+  --color-dark: #333; /* General dark text/element color */
+  --color-primary: #4CAF50; /* Main green for actions */
+  --color-secondary: #FFC107; /* Yellow/Orange for highlights */
+  --color-accent: #2196F3; /* Blue for interactive elements */
+  --text-light: #f4f4f4; /* Light text color */
+  --bg-light: #f8f9fa; /* Light background */
+  --color-danger: #dc3545; /* Red for errors/removals */
+  --color-text-muted: #6c757d; /* Muted text color */
+  --color-text-body: #495057; /* Body text color */
 }
 
+
+/* --- Map Container Styling (used by WasteMap.tsx) --- */
+.mapContainer {
+  height: 100%; /* Take full height of its parent (.mapWrapper in map/page.module.css) */
+  width: 100%;
+  /* border-radius and box-shadow are now handled by .mapWrapper in map/page.module.css */
+}
+
+/* --- Custom Marker Icon Styling --- */
 .customMapMarker {
-  /* This targets the div created by L.divIcon */
-  font-size: 2.5rem; /* Adjust icon size */
-  line-height: 1; /* Remove extra space above/below icon */
-  text-align: center;
-  position: relative;
-  top: 3px; /* Fine-tune vertical alignment if needed */
+  font-size: 32px; /* Adjust size of the marker icon */
+  line-height: 1;
+  filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.6)); /* Adds a shadow to make it pop */
+  transition: transform 0.2s ease-out; /* Smooth hover effect */
 }
 
 .customMapMarker svg {
-  display: block; /* Ensure SVG fills its container */
-  width: 100%;
-  height: 100%;
+  display: block; /* Ensures SVG behaves correctly in flex/block layouts */
+  width: 1em; /* Scales with font-size */
+  height: 1em; /* Scales with font-size */
+  fill: currentColor; /* Inherits color from parent (set by JavaScript) */
 }
 
-/* Optional: Styles for the popup content */
+.customMapMarker:hover {
+  transform: translateY(-8px) scale(1.1); /* Lift and slightly enlarge on hover */
+}
+
+/* --- Popup Content Styling --- */
 .popupContent {
-  padding: 5px;
+  font-family: 'Inter', sans-serif; /* Use a modern sans-serif font */
+  color: var(--color-dark);
+  padding: 8px;
   text-align: center;
-  min-width: 150px;
+  max-width: 220px; /* Constrain popup width */
 }
 
 .popupTitle {
   margin-top: 0;
-  margin-bottom: 8px;
-  font-size: 1.1rem;
-  color: var(--color-primary-dark);
+  margin-bottom: 5px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: var(--color-dark);
+  line-height: 1.3;
 }
 
 .popupDescription {
-  font-size: 0.9rem;
-  color: var(--color-text-secondary);
+  font-size: 0.9em;
+  color: #555;
   margin-bottom: 8px;
 }
 
-.popupStatus {
-  font-weight: bold;
-  font-size: 0.95rem;
-  padding: 4px 8px;
+.popupImage {
+  max-width: 100%;
+  height: auto;
   border-radius: 4px;
+  margin-top: 5px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.popupStatus {
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
   display: inline-block;
   margin-bottom: 10px;
+  font-size: 0.8em;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.statusPending {
-  background-color: var(--status-pending-bg);
-  color: var(--status-pending);
-}
-
-.statusAssigned {
-  background-color: var(--status-assigned-bg);
-  color: var(--status-assigned);
-}
-
-.statusCompleted {
-  background-color: var(--status-completed-bg);
-  color: var(--status-completed);
-}
+/* Status-specific colors (defined in :root or globals.css) */
+.statusPending { background-color: var(--status-pending); }
+.statusAssigned { background-color: var(--status-assigned); }
+.statusCompleted { background-color: var(--status-completed); }
 
 .popupDetailsButton {
-  background-color: var(--color-primary);
+  background-color: var(--color-accent); /* Blue accent color */
   color: white;
   border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
+  padding: 8px 15px;
+  border-radius: 25px; /* Pill shape */
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: background-color 0.2s ease;
+  font-size: 0.9em;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .popupDetailsButton:hover {
-  background-color: var(--color-primary-dark);
+  background-color: color-mix(in srgb, var(--color-accent) 80%, black); /* Darken on hover */
+  transform: translateY(-2px); /* Slight lift */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
-/* Define CSS variables for status colors (e.g., in global.css or equivalent) */
-/*
-:root {
-  --status-pending: #ffc107;
-  --status-pending-bg: #fffbe6;
-  --status-assigned: #007bff;
-  --status-assigned-bg: #e6f2ff;
-  --status-completed: #28a745;
-  --status-completed-bg: #e6ffe6;
-
-  --color-primary: #4CAF50;
-  --color-primary-dark: #45a049;
-  --color-secondary: #007bff;
-  --color-text-primary: #333;
-  --color-text-secondary: #666;
-  --color-error: #dc3545;
+/* --- Map Controls (styles for MapControls.tsx) --- */
+.mapControls {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Space between sections */
 }
-*/
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 25px; /* Pill shape */
+  padding: 0.5rem 1rem;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Inner shadow for depth */
+  transition: all 0.3s ease;
+}
+
+.searchBar:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary), 0.2); /* Focus ring */
+}
+
+.searchIcon {
+  color: #777;
+  margin-right: 0.8rem;
+  font-size: 1.2rem;
+}
+
+.searchInput {
+  border: none;
+  flex-grow: 1; /* Takes up remaining space */
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  outline: none; /* Remove default outline */
+  color: var(--color-dark);
+}
+
+.searchInput::placeholder {
+  color: #aaa;
+}
+
+.filterButtons {
+  display: flex;
+  flex-wrap: wrap; /* Allow buttons to wrap to next line */
+  gap: 0.75rem; /* Space between buttons */
+  justify-content: center; /* Center align buttons when wrapped */
+  margin-top: 0.5rem;
+}
+
+.filterButton {
+  background-color: var(--bg-light);
+  color: var(--color-dark);
+  border: 1px solid #ddd;
+  padding: 0.7rem 1.2rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.filterButton:hover {
+  background-color: #e0e0e0; /* Lighter grey on hover */
+  transform: translateY(-2px); /* Slight lift */
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.filterButton.activeFilter {
+  background-color: var(--color-primary); /* Primary color when active */
+  color: white;
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 6px rgba(var(--color-primary), 0.3);
+  transform: translateY(-1px);
+}
+
+.filterButton.activeFilter .filterIcon {
+  color: white;
+}
+
+.filterIcon {
+  font-size: 1em;
+  color: var(--color-dark);
+  transition: color 0.3s ease;
+}
+
+.listWasteButton {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+  box-shadow: 0 4px 10px rgba(var(--color-primary), 0.3);
+}
+
+.listWasteButton:hover {
+  background-color: color-mix(in srgb, var(--color-primary) 80%, black);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(var(--color-primary), 0.4);
+}
+
+/* --- Listing Detail Panel (styles for ListingDetailPanel.tsx) --- */
+.detailPanelOverlay {
+  position: fixed; /* Fixed position to cover the entire viewport */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  z-index: 2000; /* High z-index to appear on top */
+  animation: fadeInOverlay 0.3s ease-out; /* Smooth fade-in */
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.detailPanel {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* Stronger shadow for modal */
+  max-width: 500px;
+  width: 90%; /* Responsive width */
+  max-height: 90vh; /* Max height to prevent overflow */
+  overflow-y: auto; /* Enable scrolling if content overflows */
+  position: relative;
+  animation: slideInUp 0.4s ease-out; /* Slide-in animation */
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.closeButton {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: #777;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.closeButton:hover {
+  color: var(--color-dark);
+  transform: rotate(90deg); /* Rotate icon on hover */
+}
+
+.detailPanelTitle {
+  text-align: center;
+  font-size: 1.8rem;
+  color: var(--color-dark);
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.detailPanelImageContainer {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.detailPanelImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  object-fit: cover; /* Ensures image covers area, might crop */
+}
+
+.detailSection {
+  margin-bottom: 1.5rem;
+}
+
+.detailItem {
+  display: flex;
+  align-items: flex-start; /* Align items to top if text wraps */
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.4;
+  gap: 0.8rem; /* Space between icon and text */
+}
+
+.detailItem strong {
+  color: var(--color-dark);
+  font-weight: 600;
+  min-width: 80px; /* Ensures labels align somewhat */
+}
+
+.detailIcon {
+  color: var(--color-primary);
+  font-size: 1.1rem;
+  flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+.detailStatus {
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: inline-block;
+  font-size: 0.9em;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detailActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+.actionButtonAssign,
+.actionButtonComplete,
+.actionButtonContactSeller {
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.actionButtonAssign {
+  background-color: var(--color-accent);
+  color: white;
+}
+.actionButtonAssign:hover {
+  background-color: color-mix(in srgb, var(--color-accent) 80%, black);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.actionButtonComplete {
+  background-color: var(--status-completed);
+  color: white;
+}
+.actionButtonComplete:hover {
+  background-color: color-mix(in srgb, var(--status-completed) 80%, black);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.actionButtonContactSeller {
+  background-color: var(--color-primary);
+  color: white;
+}
+.actionButtonContactSeller:hover {
+  background-color: color-mix(in srgb, var(--color-primary) 80%, black);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* Comments Section */
+.commentsSection {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee; /* Separator line */
+}
+
+.commentsTitle {
+  font-size: 1.4rem;
+  color: var(--color-dark);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.commentsIcon {
+  color: var(--color-primary);
+}
+
+.commentList {
+  max-height: 200px; /* Scrollable comment list */
+  overflow-y: auto;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  padding: 0.8rem;
+  background-color: var(--bg-light);
+  margin-bottom: 1rem;
+}
+
+.commentItem {
+  background-color: white;
+  padding: 0.7rem;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.commentItem:last-child {
+  margin-bottom: 0; /* No margin on the last comment */
+}
+
+.commentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.3rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.commentHeader strong {
+  color: var(--color-dark);
+  font-weight: 600;
+}
+
+.commentTime {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.commentText {
+  font-size: 0.95rem;
+  color: var(--color-text-body);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.noCommentsMessage {
+  text-align: center;
+  font-style: italic;
+  color: var(--color-text-muted);
+  padding: 1rem;
+}
+
+.addCommentForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.commentInput {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 1rem;
+  resize: vertical; /* Allow vertical resizing */
+  min-height: 60px;
+  box-sizing: border-box;
+}
+
+.commentInput:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary), 0.2);
+  outline: none;
+}
+
+.addCommentButton {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  align-self: flex-end; /* Align to the right within the flex container */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.addCommentButton:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-primary) 80%, black);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.addCommentButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* --- Responsive Adjustments for Map-specific UI --- */
+@media (max-width: 768px) {
+  .popupContent {
+    max-width: 180px;
+    padding: 5px;
+  }
+  .popupTitle {
+    font-size: 1.1em;
+  }
+  .popupDescription, .popupStatus, .popupDetailsButton {
+    font-size: 0.8em;
+  }
+  .mapControls {
+    padding: 1rem;
+    gap: 0.8rem;
+  }
+  .filterButtons {
+    gap: 0.5rem;
+  }
+  .filterButton {
+    padding: 0.6rem 1rem;
+    font-size: 0.85em;
+    gap: 0.4rem;
+  }
+  .listWasteButton {
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+    gap: 0.6rem;
+  }
+
+  .detailPanel {
+    padding: 1.5rem;
+  }
+  .closeButton {
+    font-size: 1.5rem;
+  }
+  .detailPanelTitle {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .detailItem {
+    font-size: 0.95rem;
+    gap: 0.6rem;
+  }
+  .detailItem strong {
+    min-width: 70px;
+  }
+  .detailIcon {
+    font-size: 1em;
+  }
+  .detailStatus {
+    font-size: 0.8em;
+  }
+  .detailActions {
+    flex-direction: column; /* Stack buttons vertically on small screens */
+    align-items: stretch;
+  }
+  .actionButtonAssign, .actionButtonComplete, .actionButtonContactSeller {
+    width: 100%; /* Full width when stacked */
+    justify-content: center;
+    padding: 0.7rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .commentsSection {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+  }
+  .commentsTitle {
+    font-size: 1.2rem;
+  }
+  .commentInput, .addCommentButton {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .popupContent {
+    max-width: 160px;
+  }
+  .popupTitle {
+    font-size: 1em;
+  }
+  .popupDescription, .popupStatus, .popupDetailsButton {
+    font-size: 0.75em;
+  }
+}

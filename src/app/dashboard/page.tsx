@@ -1,30 +1,26 @@
+// src/app/dashboard/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useData } from '../../contexts/DataContext';
-// CORRECTED: Import types directly from src/types
-import { WasteListing, User } from '../../types';
-import { FaBoxes, FaLeaf, FaSpinner, FaCheckCircle, FaMapMarkedAlt, FaClipboardCheck, FaPlusCircle } from 'react-icons/fa'; // Added FaPlusCircle
-import styles from './dashboard.module.css';
+import { WasteListing, User } from '../../types'; // Import types
+import { FaBoxes, FaLeaf, FaSpinner, FaCheckCircle, FaMapMarkedAlt, FaClipboardCheck } from 'react-icons/fa';
+import styles from './dashboard.module.css'; // Import module CSS
 
 export default function DashboardPage() {
   const { currentUser, loading, wasteListings, users, assignCollectorToListing, completeListing } = useData();
   const router = useRouter();
 
-  const [loadingContent, setLoadingContent] = useState(true);
-
+  // No longer need local loading state, rely directly on dataContext.loading
   useEffect(() => {
-    if (!loading) {
-      if (!currentUser) {
-        router.push('/auth/login');
-      } else {
-        setLoadingContent(false);
-      }
+    // Only redirect if DataContext has finished loading AND there's no current user
+    if (!loading && !currentUser) {
+      router.push('/auth/login');
     }
-  }, [currentUser, loading, router]);
+  }, [currentUser, loading, router]); // Depend on loading from context
 
-  if (loadingContent || loading) {
+  if (loading) { // Use 'loading' directly from context
     return (
       <div className={styles.loadingContainer}>
         <FaSpinner className={styles.loadingSpinner} />
@@ -33,9 +29,21 @@ export default function DashboardPage() {
     );
   }
 
+  // If loading is false but currentUser is null (meaning not logged in), show access denied
+  if (!currentUser) {
+    // This case is already handled by the useEffect redirect, but for robustness:
+    return (
+      <div className={styles.unauthorizedContainer}>
+        <h1>Access Denied</h1>
+        <p>Please log in to view your Dashboard.</p>
+        <button className={styles.loginRedirectButton} onClick={() => router.push('/auth/login')}>Go to Login</button>
+      </div>
+    );
+  }
+
   const userListings: WasteListing[] = currentUser?.userType === 'generator'
     ? wasteListings.filter((listing: WasteListing) => listing.userId === currentUser.id)
-    : wasteListings.filter((listing: WasteListing) => listing.assignedCollectorId === currentUser?.id || listing.status === 'pending');
+    : wasteListings.filter((listing: WasteListing) => listing.assignedCollectorId === currentUser?.id || (listing.status === 'pending' && listing.itemType === 'waste')); // Collectors see pending waste
 
   const pendingListings = userListings.filter((listing: WasteListing) => listing.status === 'pending');
   const completedListings = userListings.filter((listing: WasteListing) => listing.status === 'completed');
@@ -64,7 +72,7 @@ export default function DashboardPage() {
   const ListingCard = ({ listing, isCollectorView }: { listing: WasteListing; isCollectorView: boolean }) => (
     <div className={styles.listingCard}>
       <div>
-        <h4 className={styles.listingTitle}>{listing.wasteType} - {listing.quantity}</h4>
+        <h4 className={styles.listingTitle}>{listing.wasteType} - {listing.quantity} {listing.unit}</h4>
         <p className={styles.listingStatusText}>Status: <span className={`${styles.listingStatus} ${
           listing.status === 'pending' ? styles.statusPending :
           listing.status === 'assigned' ? styles.statusAssigned :
@@ -80,6 +88,12 @@ export default function DashboardPage() {
         {listing.description && (
           <p className={styles.listingDescription}>{listing.description}</p>
         )}
+        {listing.itemType === 'old_item' && listing.price && (
+          <p className={styles.listingDetail}>Price: ₹{listing.price.toFixed(2)}</p>
+        )}
+        {listing.imageUrl && (
+          <img src={listing.imageUrl} alt={listing.wasteType} className={styles.listingImagePreview} onError={(e) => { e.currentTarget.src = 'https://placehold.co/150x100/e0e0e0/555555?text=No+Img'; }} />
+        )}
       </div>
       <div className={styles.listingActions}>
         <button
@@ -90,7 +104,7 @@ export default function DashboardPage() {
         </button>
         {isCollectorView && (
           <div className={styles.collectorActions}>
-            {listing.status === 'pending' && (
+            {listing.status === 'pending' && listing.itemType === 'waste' && ( // Only collectors can assign waste
               <button
                 onClick={() => assignCollectorToListing(listing.id, currentUser!.id)}
                 className={styles.actionButtonAssign}
@@ -104,6 +118,14 @@ export default function DashboardPage() {
                 className={styles.actionButtonComplete}
               >
                 <FaCheckCircle className={styles.buttonIcon} /> Mark Complete
+              </button>
+            )}
+             {listing.itemType === 'old_item' && ( // "Buy/Contact Seller" for old items
+              <button
+                onClick={() => alert(`Contacting ${getGeneratorName(listing.userId)} about ${listing.wasteType} for ₹${listing.price || 'N/A'}. (Simulated action)`)}
+                className={styles.actionButtonContact}
+              >
+                <FaClipboardCheck className={styles.buttonIcon} /> View/Contact
               </button>
             )}
           </div>
@@ -140,7 +162,7 @@ export default function DashboardPage() {
       </div>
 
       <h2 className={styles.listingsSectionTitle}>
-        {currentUser?.userType === 'generator' ? 'Your Waste Listings' : 'Waste Listings for Collection'}
+        {currentUser?.userType === 'generator' ? 'Your Waste Listings' : 'Waste/Items for Collection'}
       </h2>
 
       <div className={styles.listingsGrid}>
@@ -155,8 +177,8 @@ export default function DashboardPage() {
         ) : (
           <p className={styles.noListingsMessage}>
             {currentUser?.userType === 'generator'
-              ? "You haven't listed any waste yet. Click 'List New Waste' to add one!"
-              : "No waste listings available for collection or assigned to you. Check back later!"}
+              ? "You haven't listed any waste or items yet. Go to 'List Waste' or the 'Waste & Item Map' to add one!"
+              : "No waste or items currently available for collection or assigned to you."}
           </p>
         )}
       </div>
@@ -167,7 +189,7 @@ export default function DashboardPage() {
             onClick={() => router.push('/list-waste')}
             className={styles.listWasteButton}
           >
-            <FaPlusCircle className={styles.buttonIcon} /> List New Waste
+            List New Waste / Item
           </button>
         </div>
       )}

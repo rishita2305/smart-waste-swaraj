@@ -4,8 +4,9 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useData } from '../../contexts/DataContext';
-import { WasteListing, User, Location } from '../../types'; // Corrected: Import Location if you prefer to use its type directly
-import { FaPlusCircle, FaMapMarkerAlt, FaSpinner, FaTimesCircle } from 'react-icons/fa';
+import { WasteListing, LocationData, ItemType, WasteCategory } from '../../types';
+import { FaPlusCircle, FaMapMarkerAlt, FaSpinner, FaTimesCircle, FaUpload, FaMoneyBillWave, FaTrash, FaBoxOpen } from 'react-icons/fa';
+import styles from './list-waste.module.css'; // NEW: Import module CSS for this page
 
 export default function ListWastePage() {
   const { currentUser, loading: dataContextLoading, createWasteListing } = useData();
@@ -13,25 +14,29 @@ export default function ListWastePage() {
 
   const [wasteType, setWasteType] = useState('');
   const [quantity, setQuantity] = useState('');
+  const [unit, setUnit] = useState('kg'); // Default unit
   const [description, setDescription] = useState('');
-  // Use the 'Location' type from src/types.ts for better consistency and readability
-  const [location, setLocation] = useState<Location | null>(null);
-  const [errorMessage, setErrorMessage] = useState(''); // Unified error message state
+  const [location, setLocation] = useState<LocationData | null>(null);
+  const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [locationStatus, setLocationStatus] = useState<'idle' | 'fetching' | 'success' | 'error'>('idle');
 
+  // New states for extended features
+  const [itemType, setItemType] = useState<ItemType | ''>(''); // 'waste' or 'old_item'
+  const [wasteCategory, setWasteCategory] = useState<WasteCategory | ''>(''); // Specific waste category
+  const [imageUrl, setImageUrl] = useState(''); // Simulated image URL
+  const [price, setPrice] = useState<number | ''>(''); // For 'old_item'
 
   useEffect(() => {
-    // Redirect if not loaded or not logged in, or not a generator
     if (!dataContextLoading && (!currentUser || currentUser.userType !== 'generator')) {
       router.push('/auth/login');
     }
   }, [currentUser, dataContextLoading, router]);
 
   const fetchCurrentLocation = () => {
-    setErrorMessage(''); // Clear previous errors
+    setErrorMessage('');
     if (!navigator.geolocation) {
-      setErrorMessage('Geolocation is not supported by your browser. Please enter location manually if an alternative is provided or contact support.');
+      setErrorMessage('Geolocation is not supported by your browser. Please enter location manually.');
       setLocationStatus('error');
       return;
     }
@@ -42,184 +47,320 @@ export default function ListWastePage() {
         setLocation({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
+          address: 'Fetching address...' // Placeholder, could be reverse geocoded
         });
         setLocationStatus('success');
-        setErrorMessage(''); // Clear location-specific error
+        setErrorMessage('');
       },
       (geoError) => {
         console.error('Geolocation error:', geoError);
         let msg = 'Unable to retrieve your location. ';
         switch (geoError.code) {
-          case geoError.PERMISSION_DENIED:
-            msg += 'Please grant location access in your browser settings.';
-            break;
-          case geoError.POSITION_UNAVAILABLE:
-            msg += 'Location information is unavailable.';
-            break;
-          case geoError.TIMEOUT:
-            msg += 'The request to get user location timed out.';
-            break;
-          default:
-            msg += 'An unknown error occurred.';
+          case geoError.PERMISSION_DENIED: msg += 'Please grant location access.'; break;
+          case geoError.POSITION_UNAVAILABLE: msg += 'Location information is unavailable.'; break;
+          case geoError.TIMEOUT: msg += 'The request to get user location timed out.'; break;
+          default: msg += 'An unknown error occurred.';
         }
         setErrorMessage(msg);
         setLocationStatus('error');
       },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 } // Options for geolocation
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
   };
 
   const handleClearLocation = () => {
     setLocation(null);
     setLocationStatus('idle');
-    setErrorMessage(''); // Clear error when location is cleared
+    setErrorMessage('');
   };
+
+  // Simulated image upload - in a real app, this would handle file uploads
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      // For hackathon, just simulate a placeholder image URL
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target && event.target.result) {
+          // In a real app, you'd upload this file to a service (e.g., Firebase Storage)
+          // and get a permanent URL. For now, we use a generic placeholder.
+          setImageUrl(`https://placehold.co/400x300/e0e0e0/555555?text=Your+Image+Uploaded`);
+          // Or, to show the specific image, you would use event.target.result as a data URL,
+          // but that can be large and isn't a permanent solution.
+          // setImageUrl(event.target.result as string);
+        }
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMessage(''); // Clear general error message
+    setErrorMessage('');
 
     if (!currentUser) {
       setErrorMessage('You must be logged in to list waste.');
-      router.push('/auth/login'); // Ensure immediate redirect logic
+      router.push('/auth/login');
       return;
     }
-
+    if (!itemType) {
+      setErrorMessage('Please select whether you are listing waste or an old item.');
+      return;
+    }
+    if (itemType === 'waste' && !wasteCategory) {
+      setErrorMessage('Please select a waste category.');
+      return;
+    }
     if (!location) {
-      setErrorMessage('Please provide a location for the waste.');
+      setErrorMessage('Please provide a location for the listing.');
       return;
     }
-
-    if (!wasteType.trim() || !quantity.trim()) { // Trim to check for empty strings
-      setErrorMessage('Waste Type and Quantity are required.');
+    if (!wasteType.trim() || !quantity.trim()) {
+      setErrorMessage('Type and Quantity are required.');
+      return;
+    }
+    if (itemType === 'old_item' && price === '') {
+      setErrorMessage('Price is required for old items.');
       return;
     }
 
     setIsSubmitting(true);
 
-    const newListing: Omit<WasteListing, 'id' | 'createdAt' | 'status'> = {
+    const newListing: Omit<WasteListing, 'id' | 'createdAt' | 'status' | 'assignedCollectorId' | 'completedAt' | 'comments'> = {
       userId: currentUser.id,
       wasteType,
       quantity,
-      description: description.trim(), // Trim description
-      location: JSON.stringify(location), // Serialize location object to string
+      unit,
+      description: description.trim(),
+      location: location,
+      itemType,
+      wasteCategory: itemType === 'waste' && wasteCategory !== '' ? wasteCategory : undefined, // Only set category if itemType is 'waste' and selected
+      imageUrl: imageUrl || undefined, // Only include if provided
+      price: itemType === 'old_item' && price !== '' ? Number(price) : undefined, // Only for old items
     };
 
     try {
       await createWasteListing(newListing);
-      console.log('Waste listing created successfully!'); // Log success
+      console.log('Listing created successfully!');
       router.push('/dashboard'); // Redirect to dashboard after successful listing
     } catch (submitError) {
-      console.error('Failed to create waste listing:', submitError);
-      setErrorMessage('Failed to create waste listing. Please try again.');
+      console.error('Failed to create listing:', submitError);
+      setErrorMessage('Failed to create listing. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Render loading state while data context is loading or user is being redirected
   if (dataContextLoading || (!currentUser && !dataContextLoading) || (currentUser && currentUser.userType !== 'generator' && !dataContextLoading)) {
     return (
-      <div className="loader">
-        <FaSpinner className="spinner" />
-        <p>Loading...</p>
+      <div className={styles.loadingContainer}>
+        <FaSpinner className={styles.loadingSpinner} />
+        <p className={styles.loadingText}>Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="list-waste-container">
-      <h1 className="list-waste-title">List New Waste</h1>
-      <form onSubmit={handleSubmit} className="form"> {/* 'form' class for general form styling */}
-        <div className="form-group">
-          <label htmlFor="wasteType" className="form-label">Waste Type</label>
+    <div className={styles.listWasteContainer}>
+      <h1 className={styles.listWasteTitle}>List New Item</h1>
+      <p className={styles.listWasteSubtitle}>Help keep India clean by listing your waste for collection, or find a new home for your old items!</p>
+
+      <form onSubmit={handleSubmit} className={styles.form}>
+
+        {/* Item Type Selection */}
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>What are you listing?</label>
+          <div className={styles.itemTypeSelection}>
+            <button
+              type="button"
+              className={`${styles.itemTypeButton} ${itemType === 'waste' ? styles.activeItemType : ''}`}
+              onClick={() => setItemType('waste')}
+            >
+              <FaTrash className={styles.buttonIcon} /> Waste for Collection
+            </button>
+            <button
+              type="button"
+              className={`${styles.itemTypeButton} ${itemType === 'old_item' ? styles.activeItemType : ''}`}
+              onClick={() => setItemType('old_item')}
+            >
+              <FaBoxOpen className={styles.buttonIcon} /> Old Item to Sell/Donate
+            </button>
+          </div>
+          {!itemType && <p className={styles.inputHint}>Please select one.</p>}
+        </div>
+
+        {itemType === 'waste' && (
+          <div className={styles.formGroup}>
+            <label htmlFor="wasteCategory" className={styles.formLabel}>Waste Category</label>
+            <select
+              id="wasteCategory"
+              className={styles.formSelect}
+              value={wasteCategory}
+              onChange={(e) => setWasteCategory(e.target.value as WasteCategory)}
+              required
+            >
+              <option value="">Select a category</option>
+              <option value="biodegradable">Biodegradable (Wet Waste)</option>
+              <option value="non_biodegradable">Non-Biodegradable (Mixed Dry Waste)</option>
+              <option value="recyclable_plastic">Recyclable Plastic</option>
+              <option value="recyclable_paper">Recyclable Paper/Cardboard</option>
+              <option value="recyclable_metal">Recyclable Metal</option>
+              <option value="e_waste">E-Waste</option>
+              <option value="hazardous">Hazardous (Batteries, Chemicals)</option>
+              <option value="other">Other Waste</option>
+            </select>
+          </div>
+        )}
+
+        <div className={styles.formGroup}>
+          <label htmlFor="wasteType" className={styles.formLabel}>{itemType === 'old_item' ? 'Item Name' : 'Waste Type'}</label>
           <input
             type="text"
             id="wasteType"
-            className="form-input"
-            placeholder="e.g., Plastic Bottles, Organic Waste"
+            className={styles.formInput}
+            placeholder={itemType === 'old_item' ? 'e.g., Old Books, Furniture, Electronics' : 'e.g., Plastic Bottles, Organic Waste'}
             value={wasteType}
             onChange={(e) => setWasteType(e.target.value)}
             required
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="quantity" className="form-label">Quantity</label>
-          <input
-            type="text"
-            id="quantity"
-            className="form-input"
-            placeholder="e.g., 5 kg, 2 bags, 1 unit"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            required
-          />
+        <div className={styles.formGroup}>
+          <label htmlFor="quantity" className={styles.formLabel}>Quantity</label>
+          <div className={styles.quantityInputGroup}>
+            <input
+              type="text"
+              id="quantity"
+              className={styles.formInput}
+              placeholder="e.g., 5, 200"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+              required
+            />
+            <select
+              id="unit"
+              className={styles.formSelectUnit}
+              value={unit}
+              onChange={(e) => setUnit(e.target.value)}
+            >
+              <option value="kg">kg</option>
+              <option value="grams">grams</option>
+              <option value="liters">liters</option>
+              <option value="pieces">pieces</option>
+              <option value="bags">bags</option>
+              <option value="units">units</option>
+              <option value="boxes">boxes</option>
+            </select>
+          </div>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="description" className="form-label">Description (Optional)</label>
+        {itemType === 'old_item' && (
+          <div className={styles.formGroup}>
+            <label htmlFor="price" className={styles.formLabel}>Price (₹) <span className={styles.optionalText}>(Leave blank if donating)</span></label>
+            <div className={styles.priceInputGroup}>
+              <span className={styles.priceCurrency}>₹</span>
+              <input
+                type="number"
+                id="price"
+                className={styles.formInput}
+                placeholder="e.g., 500"
+                value={price}
+                onChange={(e) => setPrice(Number(e.target.value) || '')}
+              />
+            </div>
+          </div>
+        )}
+
+        <div className={styles.formGroup}>
+          <label htmlFor="description" className={styles.formLabel}>Description (Optional)</label>
           <textarea
             id="description"
-            className="form-textarea"
+            className={styles.formTextarea}
             rows={3}
-            placeholder="Any specific details about the waste (e.g., mixed, soiled, fragile)"
+            placeholder={itemType === 'old_item' ? 'Details about the item (condition, dimensions, etc.)' : 'Specific details about the waste (e.g., mixed, soiled, fragile)'}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           ></textarea>
         </div>
 
-        <div className="form-group">
-          <label className="form-label">Waste Location</label>
+        {/* Image Upload */}
+        <div className={styles.formGroup}>
+          <label htmlFor="imageUrl" className={styles.formLabel}>Upload Photo (Optional)</label>
+          <input
+            type="file"
+            id="imageUrl"
+            accept="image/*"
+            className={styles.fileInput}
+            onChange={handleImageUpload}
+          />
+          {imageUrl && (
+            <div className={styles.imagePreviewContainer}>
+              <img src={imageUrl} alt="Uploaded Preview" className={styles.imagePreview} />
+              <button type="button" className={styles.removeImageButton} onClick={() => setImageUrl('')}>
+                <FaTimesCircle /> Remove Image
+              </button>
+            </div>
+          )}
+          {!imageUrl && (
+            <p className={styles.inputHint}>
+              <FaUpload /> Upload a clear photo of the waste/item.
+            </p>
+          )}
+        </div>
+
+
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Location</label>
           {!location ? (
             <button
               type="button"
               onClick={fetchCurrentLocation}
-              className="btn btn-secondary w-full" // Use custom button classes
+              className={styles.locationButton}
               disabled={locationStatus === 'fetching'}
             >
               {locationStatus === 'fetching' ? (
                 <>
-                  <FaSpinner className="spinner mr-2" /> Fetching Location...
+                  <FaSpinner className={styles.spinner} /> Fetching Location...
                 </>
               ) : (
                 <>
-                  <FaMapMarkerAlt className="mr-2" /> Use Current Location
+                  <FaMapMarkerAlt className={styles.buttonIcon} /> Use Current Location
                 </>
               )}
             </button>
           ) : (
-            <div className="location-info-box"> {/* Custom class for location info display */}
-              <FaMapMarkerAlt />
+            <div className={styles.locationInfoBox}>
+              <FaMapMarkerAlt className={styles.buttonIcon} />
               <span>
                 Lat: {location.latitude.toFixed(4)}, Lng: {location.longitude.toFixed(4)}
+                {location.address && `, ${location.address}`}
               </span>
-              <button type="button" onClick={handleClearLocation} className="location-clear-btn">
-                <FaTimesCircle /> Clear
+              <button type="button" onClick={handleClearLocation} className={styles.locationClearButton}>
+                <FaTimesCircle className={styles.buttonIcon} /> Clear
               </button>
             </div>
           )}
-          {locationStatus === 'error' && ( // Show location-specific errors here
-            <p className="text-error">{errorMessage}</p>
+          {locationStatus === 'error' && (
+            <p className={styles.errorMessageText}>{errorMessage}</p>
           )}
         </div>
 
-        {errorMessage && locationStatus !== 'error' && ( // Show general errors here, excluding location-specific ones
-          <p className="text-error">{errorMessage}</p>
+        {errorMessage && locationStatus !== 'error' && (
+          <p className={styles.errorMessageText}>{errorMessage}</p>
         )}
 
         <button
           type="submit"
-          className="btn btn-primary w-full mt-6" // Use custom button classes
-          disabled={isSubmitting || !location || !wasteType.trim() || !quantity.trim()} // Disable if no location or empty fields
+          className={styles.submitButton}
+          disabled={isSubmitting || !location || !wasteType.trim() || !quantity.trim() || !itemType || (itemType === 'waste' && !wasteCategory) || (itemType === 'old_item' && price === '')}
         >
           {isSubmitting ? (
             <>
-              <FaSpinner className="spinner mr-2" /> Submitting...
+              <FaSpinner className={styles.spinner} /> Submitting...
             </>
           ) : (
             <>
-              <FaPlusCircle className="mr-2" /> List Waste
+              <FaPlusCircle className={styles.buttonIcon} /> List Item
             </>
           )}
         </button>

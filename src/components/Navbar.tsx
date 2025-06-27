@@ -42,9 +42,10 @@ export default function Navbar() {
                   <FaPlusSquare className="inline-block mr-1" /> List Waste
                 </Link>
               )}
-              <Link href="/map" className="text-white hover:text-accent transition-colors duration-200 flex items-center">
-                <FaMapMarkedAlt className="inline-block mr-1" /> Map
-              </Link>
+             
+        <Link href="/map" className="text-white hover:text-accent transition-colors duration-200 flex items-center">
+          <FaMapMarkedAlt className="inline-block mr-1" /> Waste Map
+        </Link>
               <Link href="/dashboard" className="text-white hover:text-accent transition-colors duration-200 flex items-center">
                 <FaTachometerAlt className="inline-block mr-1" /> Dashboard
               </Link>
