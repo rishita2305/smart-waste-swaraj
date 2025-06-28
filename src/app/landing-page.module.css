@@ -386,81 +386,201 @@
 }
 
 
-/* --- Contact Section --- */
-.contactSection {
-  padding: 80px 0;
-  background-color: white;
-  text-align: center;
-}
-
-.contactSubtitle {
-  font-family: var(--font-body);
-  font-size: 1.2em;
-  color: var(--color-text-body);
-  margin-bottom: 40px;
-}
-
-.contactLinks {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 30px;
-}
-
-.contactLink {
-  background-color: var(--color-accent); /* Blue */
-  color: white;
-  padding: 15px 30px;
-  border-radius: 50px;
-  font-size: 1.1em;
-  font-weight: bold;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(var(--color-accent), 0.3); /* Keep box shadow on links */
-}
-
-.contactLink:hover {
-  background-color: color-mix(in srgb, var(--color-accent) 85%, black);
-  transform: translateY(-4px);
-  box-shadow: 0 6px 15px rgba(var(--color-accent), 0.4);
-}
-
 /* --- Footer Styling --- */
 .footer {
-  background-color: var(--color-dark); /* Dark background */
-  color: var(--text-light);
-  padding: 30px 0;
-  text-align: center;
-  font-family: var(--font-body);
-  font-size: 0.95em;
+  background-color: #1a1a1a; /* Black background */
+  color: white; /* White text */
+  padding: 60px 0 30px 0;
+  border-top: 1px solid #333; /* Dark border at top */
   margin-top: auto; /* Pushes footer to the bottom */
 }
 
-.footer .container {
+.footerContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+
+.footerColumn {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 15px;
+}
+
+/* Contact Info Column */
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footerAddress {
+  font-family: var(--font-body);
+  font-size: 0.95em;
+  color: white; /* White text */
+  margin: 0;
+  line-height: 1.4;
+}
+
+.footerContact {
+  font-family: var(--font-body);
+  font-size: 0.95em;
+  color: white; /* White text */
+  margin: 0;
+  font-weight: 500;
+}
+
+.footerEmail {
+  color: var(--color-accent); /* Blue color for email link */
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 0.95em;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.footerEmail:hover {
+  color: color-mix(in srgb, var(--color-accent) 85%, black);
+  text-decoration: underline;
+}
+
+/* Company Column */
+.footerColumnTitle {
+  font-family: var(--font-heading);
+  font-size: 1.1em;
+  font-weight: 700;
+  color: white; /* White text */
+  margin: 0 0 10px 0;
+}
+
+.footerList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footerListLink {
+  color: #ccc; /* Light gray for footer links */
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 0.95em;
+  transition: color 0.3s ease;
+}
+
+.footerListLink:hover {
+  color: var(--color-accent);
+}
+
+/* Contact Us Column */
+.emailInputWrapper {
+  display: flex;
+  background-color: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.footerEmailInput {
+  flex: 1;
+  padding: 12px 15px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 0.9em;
+  color: var(--color-text-body);
+  outline: none;
+}
+
+.footerEmailInput::placeholder {
+  color: var(--color-text-muted);
+}
+
+.footerEmailButton {
+  background-color: var(--color-accent); /* Blue button */
+  color: white;
+  border: none;
+  padding: 12px 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  min-width: 45px;
+}
+
+.footerEmailButton:hover {
+  background-color: color-mix(in srgb, var(--color-accent) 85%, black);
+}
+
+.footerCallButton {
+  background-color: var(--color-accent); /* Blue button */
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 0.95em;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+  margin-bottom: 10px;
+}
+
+.footerCallButton:hover {
+  background-color: color-mix(in srgb, var(--color-accent) 85%, black);
+  transform: translateY(-2px);
+}
+
+.footerSupportText {
+  font-family: var(--font-body);
+  font-size: 0.85em;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Legal Column */
+.footerLegal {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.footerCopyright {
+  font-family: var(--font-body);
+  font-size: 0.9em;
+  color: white; /* White text */
+  margin: 0;
+  line-height: 1.4;
 }
 
 .footerLinks {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.footerLink {
-  color: var(--text-light);
+.footerLegalLink {
+  color: var(--color-text-muted);
   text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 0.9em;
   transition: color 0.3s ease;
 }
 
-.footerLink:hover {
-  color: var(--color-primary); /* Green on hover */
+.footerLegalLink:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
 }
 
 /* --- Responsive Media Queries --- */
@@ -504,6 +624,12 @@
   }
   .faqAnswer {
     font-size: 0.95em;
+  }
+  
+  /* Footer Responsive */
+  .footerContainer {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
   }
 }
 
@@ -565,6 +691,15 @@
   .faqAnswer {
     font-size: 0.9em;
   }
+  
+  /* Footer Responsive */
+  .footerContainer {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+  .footerColumnTitle {
+    font-size: 1em;
+  }
 }
 
 @media (max-width: 480px) {
@@ -593,17 +728,25 @@
   .benefitsGrid {
     grid-template-columns: 1fr; /* Single column */
   }
-  .contactLink {
-    flex-direction: column; /* Stack contact links */
-    padding: 15px 20px;
-    gap: 5px;
+  .footerContainer {
+    grid-template-columns: 1fr; /* Single column footer */
+    gap: 30px;
+    text-align: center;
   }
-  .footer .container {
-    gap: 10px;
+  .footerColumn {
+    align-items: center;
   }
-  .footerLinks {
-    flex-direction: column;
-    gap: 10px;
+  .contactInfo {
+    align-items: center;
+  }
+  .footerList {
+    align-items: center;
+  }
+  .footerLegal {
+    align-items: center;
+  }
+  .footerCallButton {
+    align-self: center;
   }
 
   /* FAQ Responsive */
