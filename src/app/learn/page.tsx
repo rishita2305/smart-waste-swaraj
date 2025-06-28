@@ -170,24 +170,18 @@ export default function LearnPage() {
         </p>
         <div className={styles.videoGrid}>
           <div className={styles.videoCard}>
-            <div className={styles.videoThumbnail}>
-              <Image
-                src="/images/video_thumbnail_1.jpg" // Thumbnail for the video
-                alt="How to Compost at Home"
-                width={500}
-                height={300}
-                layout="responsive" // Make image responsive within container
-                className={styles.videoImage}
-              />
-              <a
-                href="https://www.youtube.com/watch?v=your-video-id-1"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.playButton}
-              >
-                <FaPlayCircle />
-              </a>
+            <div className={styles.videoEmbed}>
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/_K25WjjCBuw"
+                title="Composting Basics for Beginners"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
             </div>
+
             <h3 className={styles.videoTitle}>
               Composting Basics for Beginners
             </h3>
@@ -197,24 +191,18 @@ export default function LearnPage() {
           </div>
 
           <div className={styles.videoCard}>
-            <div className={styles.videoThumbnail}>
-              <Image
-                src="/images/video_thumbnail_2.jpg" // Thumbnail for the video
-                alt="Impact of Plastic Waste"
-                width={500}
-                height={300}
-                layout="responsive"
-                className={styles.videoImage}
-              />
-              <a
-                href="https://www.youtube.com/watch?v=your-video-id-2"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.playButton}
-              >
-                <FaPlayCircle />
-              </a>
+            <div className={styles.videoEmbed}>
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/9q29nu2T0Ko"
+                title="Global Plastic Crisis"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
             </div>
+
             <h3 className={styles.videoTitle}>
               The Global Plastic Crisis: What You Can Do
             </h3>

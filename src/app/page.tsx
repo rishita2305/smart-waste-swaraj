@@ -1,10 +1,21 @@
 // src/app/page.tsx
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { FaRecycle, FaMapMarkedAlt, FaLeaf, FaQuestionCircle, FaEnvelope, FaBolt, FaMinus, FaPlus } from 'react-icons/fa';
-import styles from './landing-page.module.css'; // Import module CSS
-import React, { useState } from 'react';
+import Link from "next/link";
+import {
+  FaRecycle,
+  FaMapMarkedAlt,
+  FaLeaf,
+  FaQuestionCircle,
+  FaEnvelope,
+  FaBolt,
+  FaMinus,
+  FaPlus,
+  FaArrowRight,
+  FaPhone,
+} from "react-icons/fa";
+import styles from "./landing-page.module.css"; // Import module CSS
+import React, { useState } from "react";
 
 export default function LandingPage() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -105,7 +116,10 @@ export default function LandingPage() {
                 style={{ color: "#8a2be2" /* Custom purple */ }}
               />
               <h3 className={styles.benefitTitle}>Sustainable Future</h3>
-              <p className={styles.benefitDescription}>Support a circular economy and promote responsible waste management practices.</p>
+              <p className={styles.benefitDescription}>
+                Support a circular economy and promote responsible waste
+                management practices.
+              </p>
             </div>
           </div>
         </div>
@@ -137,7 +151,11 @@ export default function LandingPage() {
                   </div>
                 </button>
                 {/* THIS IS THE CRUCIAL WRAPPER FOR SMOOTH ANIMATION */}
-                <div className={`${styles.faqAnswerWrapper} ${openFAQ === index ? styles.faqAnswerOpen : ''}`}>
+                <div
+                  className={`${styles.faqAnswerWrapper} ${
+                    openFAQ === index ? styles.faqAnswerOpen : ""
+                  }`}
+                >
                   <div className={styles.faqAnswer}>
                     <p>{item.answer}</p>
                   </div>
@@ -148,41 +166,80 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Contact Us Section */}
-      <section className={styles.contactSection}>
-        <div className={styles.container}>
-          <h2 className={styles.sectionTitle}>Get in Touch</h2>
-          <p className={styles.contactSubtitle}>
-            Have questions or need support? Reach out to us!
-          </p>
-          <div className={styles.contactLinks}>
-            <a
-              href="mailto:info@smartwasteswaraj.com"
-              className={styles.contactLink}
-            >
-              <FaEnvelope /> Email Us
-            </a>
-            <a href="tel:+919876543210" className={styles.contactLink}>
-              <FaRecycle /> Call Us
-            </a>
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className={styles.footer}>
-        <div className={styles.container}>
-          <p>
-            &copy; {new Date().getFullYear()} Smart Waste Swaraj. All rights
-            reserved.
-          </p>
-          <div className={styles.footerLinks}>
-            <Link href="/privacy" className={styles.footerLink}>
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className={styles.footerLink}>
-              Terms of Service
-            </Link>
+        <div className={styles.footerContainer}>
+          {/* Contact Info Column */}
+          <div className={styles.footerColumn}>
+            <div className={styles.contactInfo}>
+              <p className={styles.footerAddress}>NIT Kurukshetra</p>
+              <p className={styles.footerAddress}>
+                Thanesar, Kurukshetra, Haryana, 136119
+              </p>
+              <p className={styles.footerContact}>+01744-233208</p>
+              <a
+                href="mailto:registrar@nitkkr.ac.in"
+                className={styles.footerEmail}
+              >
+                registrar@nitkkr.ac.in
+              </a>
+            </div>
+          </div>
+
+          {/* Company Column */}
+          <div className={styles.footerColumn}>
+            <h3 className={styles.footerColumnTitle}>Company</h3>
+            <ul className={styles.footerList}>
+              <li>
+                <Link href="/about" className={styles.footerListLink}>
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="#faq" className={styles.footerListLink}>
+                  FAQs
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact Us Column */}
+          <div className={styles.footerColumn}>
+            <h3 className={styles.footerColumnTitle}>Contact Us</h3>
+            <div className={styles.emailInputWrapper}>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className={styles.footerEmailInput}
+              />
+              <button className={styles.footerEmailButton}>
+                <FaArrowRight />
+              </button>
+            </div>
+            <a href="tel:+919876543210" className={styles.footerCallButton}>
+              <FaPhone /> Call Us
+            </a>
+            <p className={styles.footerSupportText}>
+              Have questions or need support? Reach out to us!
+            </p>
+          </div>
+
+          {/* Legal Column */}
+          <div className={styles.footerColumn}>
+            <div className={styles.footerLegal}>
+              <p className={styles.footerCopyright}>
+                &copy; {new Date().getFullYear()} Smart Waste Swaraj. All rights
+                reserved.
+              </p>
+              <div className={styles.footerLinks}>
+                <Link href="/privacy" className={styles.footerLegalLink}>
+                  Privacy Policy
+                </Link>
+                <Link href="/terms" className={styles.footerLegalLink}>
+                  Terms of Service
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </footer>
