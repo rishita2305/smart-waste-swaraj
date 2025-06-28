@@ -1,65 +1,71 @@
 /* src/components/layout/navbar.module.css */
 
-/* --- Root Variables (assuming these are in your globals.css, if not, add them!) --- */
+/* --- Root Variables (Add these to your globals.css if they aren't already there for consistency) --- */
 /*
 :root {
-  --color-primary: #4CAF50; // A vibrant green
-  --color-secondary: #FFC107; // An engaging yellow/orange
-  --color-accent: #2196F3; // A bright blue for highlights
-  --color-dark: #333; // Darker shade for text/icons
-  --text-light: #f4f4f4; // Light text color
+  --color-primary: #3f51b5;     // A professional deep blue
+  --color-secondary: #ffeb3b;   // A bright, contrasting yellow
+  --color-accent: #00bcd4;      // A vibrant teal for highlights
+  --color-dark: #212121;        // Dark shade for text/icons
+  --text-light: #ffffff;        // Pure white for text on dark backgrounds
+  --button-hover-dark: #303f9f; // Darker primary for button hover effect
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.2);
+  --shadow-strong: rgba(0, 0, 0, 0.3);
 }
 */
 
 /* --- Base Navbar Styling --- */
 .navbar {
-  background-color: var(--color-primary); /* Use a more vibrant primary color */
-  padding: 0.8rem 0; /* Slightly reduce padding for a sleeker look */
-  color: var(--text-light); /* Ensure text is light on dark primary background */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); /* More pronounced shadow */
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  transition: all 0.3s ease-in-out; /* Smooth transitions for hover/scroll effects */
+  background-color: var(--color-primary);
+  padding: 0.5rem 0; /* Reduced padding for smaller height */
+  color: var(--text-light);
+  box-shadow: 0 4px 12px var(--shadow-medium); /* Refined shadow for a sleeker look */
+  position: sticky; /* Makes the navbar stick to the top */
+  top: 0;           /* Sticks it at the very top */
+  z-index: 1000;    /* Ensures it's above other content when scrolling */
+  transition: all 0.3s ease-in-out; /* Smooth transitions for any property changes */
 }
 
 .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
+  max-width: 1200px; /* Standard max-width for content */
   margin: 0 auto;
-  padding: 0 1.5rem; /* Increased horizontal padding */
-  min-height: 60px; /* Ensure a consistent height */
+  padding: 0 1.5rem; /* Horizontal padding */
+  min-height: 55px; /* Reduced minimum height for a more compact navbar */
 }
 
 /* --- Logo Styling --- */
 .logo {
-  font-size: 1.8rem; /* Slightly larger logo text */
-  font-weight: 700; /* Bolder font weight */
+  font-size: 1.7rem; /* Reduced logo text size for compactness */
+  font-weight: 700; /* Bold font weight */
   color: var(--text-light);
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 0.6rem; /* Space between icon and text */
-  transition: color 0.3s ease;
-  letter-spacing: 0.05em; /* A little letter spacing */
+  gap: 0.5rem; /* Space between icon and text */
+  transition: all 0.2s ease-out; /* Quick, subtle transition */
+  letter-spacing: 0.04em; /* Subtle letter spacing */
+  text-shadow: 0.5px 0.5px 2px var(--shadow-light); /* Soft text shadow for depth */
 }
 
 .logo:hover {
-  color: var(--color-secondary); /* Highlight logo on hover */
+  color: var(--color-secondary); /* Highlight on hover */
   transform: scale(1.02); /* Subtle zoom effect */
+  text-shadow: 0.5px 0.5px 3px var(--shadow-medium);
 }
 
 .logoIcon {
-  font-size: 2.2rem; /* Size of the emoji/icon next to text */
-  line-height: 1; /* Align text better */
+  font-size: 2.2rem; /* Icon size */
+  line-height: 1; /* Ensures vertical alignment */
 }
 
-/* --- Navigation Links Container --- */
+/* --- Navigation Links Container (Desktop) --- */
 .navLinks {
   display: flex;
-  gap: 2rem; /* Increased space between nav items for clarity */
+  gap: 1.8rem; /* Reduced space between nav items for compactness */
   align-items: center;
   transition: all 0.4s ease-in-out; /* Smooth transition for mobile menu slide */
 }
@@ -67,119 +73,130 @@
 /* --- Individual Navigation Link Styling --- */
 .navLink {
   color: var(--text-light);
-  font-size: 1.05rem; /* Slightly larger font for main links */
+  font-size: 1rem; /* Standard font size */
   font-weight: 500;
   text-decoration: none;
-  padding: 0.6rem 1rem; /* More generous padding for clickable area */
+  padding: 0.5rem 0.9rem; /* Reduced padding for compactness */
   border-radius: 0.4rem; /* Slightly rounded corners */
-  transition: all 0.3s ease; /* Smooth transitions for hover effects */
-  display: flex; /* For icon and text alignment */
+  transition: all 0.2s ease; /* Quicker transitions for hover effects */
+  display: flex;
   align-items: center;
-  gap: 0.5rem; /* Space between icon and text */
-  white-space: nowrap; /* Prevent links from wrapping */
-  position: relative; /* For the custom underline effect */
+  gap: 0.4rem; /* Space between icon and text */
+  white-space: nowrap; /* Prevent text wrapping */
+  position: relative;
+  overflow: hidden; /* For the background slide effect */
 }
 
 .navLink:hover {
-  color: var(--color-secondary); /* Link text highlights on hover */
-  background-color: rgba(255, 255, 255, 0.1); /* Subtle background glow */
-  transform: translateY(-3px); /* Noticeable lift effect */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Soft shadow on hover */
+  color: var(--color-dark); /* Dark text on bright hover background */
+  transform: translateY(-2px); /* Softer lift effect on hover */
+  box-shadow: 0 3px 10px var(--shadow-medium); /* Softer shadow on hover */
 }
 
-/* Custom animated underline for nav links on hover */
-.navLink::after {
+/* Custom animated background slide for nav links on hover */
+.navLink::before {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0; /* Starts hidden */
-  height: 2px;
-  background-color: var(--color-accent); /* Accent color for underline */
-  transition: width 0.3s ease; /* Animate width */
+  top: 0;
+  left: -100%; /* Starts off-screen to the left */
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-accent); /* Vibrant accent color */
+  transition: left 0.2s ease; /* Quick slide-in animation */
+  z-index: -1; /* Behind the text */
+  border-radius: 0.4rem;
 }
 
-.navLink:hover::after {
-  width: 80%; /* Expands to 80% width on hover */
+.navLink:hover::before {
+  left: 0; /* Slides in on hover */
 }
 
 .navIcon {
-  font-size: 1.15rem; /* Icon size */
-  transition: color 0.3s ease;
+  font-size: 1.1rem; /* Icon size */
+  transition: color 0.2s ease;
 }
 
 .navLink:hover .navIcon {
-  color: var(--color-secondary); /* Icon color changes on hover */
+  color: var(--color-dark); /* Icon color changes on hover to match text */
 }
 
 /* --- Authentication Buttons (Login/Signup) --- */
 .authButton {
-  background-color: var(--color-secondary); /* Prominent secondary color */
-  color: var(--color-dark); /* Dark text on bright button */
-  padding: 0.6rem 1.2rem;
-  border-radius: 25px; /* Pill shape */
+  background-color: var(--color-secondary);
+  color: var(--color-dark);
+  padding: 0.5rem 1rem; /* Reduced padding */
+  border-radius: 20px; /* Pill shape */
   font-weight: 600;
-  transition: all 0.3s ease;
-  border: none; /* Ensure no default button border */
+  transition: all 0.2s ease;
+  border: none; /* No default button border */
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Soft shadow */
+  box-shadow: 0 2px 5px var(--shadow-light); /* Soft shadow */
 }
 
 .authButton:hover {
-  background-color: var(--color-accent); /* Change on hover for a striking effect */
-  color: white; /* White text on accent background */
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  background-color: var(--color-accent); /* Striking change on hover */
+  color: var(--text-light); /* White text on accent background */
+  transform: translateY(-2px); /* Subtle lift */
+  box-shadow: 0 4px 8px var(--shadow-medium);
 }
 
 /* --- Logout Button --- */
 .logoutButton {
   background: none;
-  border: 1px solid var(--text-light); /* Light border */
+  border: 1px solid var(--text-light); /* Thinner border */
   color: var(--text-light);
-  padding: 0.6rem 1.2rem;
-  border-radius: 25px; /* Pill shape */
+  padding: 0.5rem 1rem; /* Reduced padding */
+  border-radius: 20px;
   cursor: pointer;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   white-space: nowrap; /* Prevent user email from wrapping */
+  display: flex; /* For icon and text alignment */
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .logoutButton:hover {
   background-color: var(--text-light); /* Invert colors on hover */
   color: var(--color-primary); /* Primary color text on light background */
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px); /* Subtle lift */
+  box-shadow: 0 4px 8px var(--shadow-medium);
 }
 
 
 /* --- Mobile Menu Toggle (Hamburger/X icon) --- */
 .menuToggle {
   display: none; /* Hidden on desktop */
-  font-size: 2rem;
+  font-size: 1.8rem; /* Smaller icon size for a cleaner look */
   color: var(--text-light);
   cursor: pointer;
-  z-index: 1001; /* Ensure it's above other elements when active */
-  transition: transform 0.3s ease;
+  z-index: 1001; /* Ensures it's clickable on top */
+  transition: transform 0.2s ease;
 }
 
 .menuToggle:hover {
-  transform: scale(1.1); /* Zoom effect on hover */
+  transform: scale(1.1); /* Subtle zoom effect */
 }
 
 
 /* --- Mobile Responsiveness --- */
-@media (max-width: 992px) { /* Adjust breakpoint for larger tablets */
+@media (max-width: 992px) { /* Adjust breakpoint for larger tablets/smaller laptops */
   .container {
     padding: 0 1rem;
+    min-height: 50px; /* Even smaller height */
+  }
+  .logo {
+    font-size: 1.6rem;
+  }
+  .logoIcon {
+    font-size: 2.1rem;
   }
   .navLinks {
     gap: 1.5rem;
   }
   .navLink, .authButton, .logoutButton {
     font-size: 0.95rem;
-    padding: 0.5rem 0.8rem;
+    padding: 0.4rem 0.8rem;
   }
 }
 
@@ -190,19 +207,20 @@
 
   .navLinks {
     flex-direction: column; /* Stack links vertically */
-    position: absolute;
-    top: 0; /* Start from the very top of the viewport */
+    position: fixed; /* Use fixed for better mobile menu positioning */
+    top: 0;
     right: 0;
-    width: 250px; /* Fixed width for the sidebar menu */
+    width: 220px; /* Reduced width for a more compact mobile menu */
+    max-width: 70%; /* Prevents menu from taking full width on very small screens */
     height: 100vh; /* Full viewport height */
-    background-color: var(--color-primary); /* Same as navbar background */
-    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.3); /* Shadow on the left edge */
-    padding-top: 5rem; /* Space for the fixed navbar */
+    background-color: var(--color-primary);
+    box-shadow: -5px 0 15px var(--shadow-strong); /* Softer shadow */
+    padding-top: 4.5rem; /* Space for the fixed navbar height */
     transform: translateX(100%); /* Start off-screen to the right */
     opacity: 0; /* Hidden initially */
     pointer-events: none; /* Disable interaction when hidden */
-    display: flex; /* Always flex column now */
-    gap: 0; /* Remove gap between items when stacked */
+    display: flex; /* Ensure it's a flex column */
+    gap: 0; /* Remove gap when stacked */
     align-items: stretch; /* Stretch items to fill menu width */
     justify-content: flex-start; /* Align items to top */
   }
@@ -215,17 +233,31 @@
 
   .navLink, .authButton, .logoutButton {
     width: 90%; /* Almost full width of the menu */
-    margin: 0.5rem auto; /* Center items with vertical spacing */
-    padding: 1rem 1.5rem; /* More padding for easier tapping */
-    font-size: 1.1rem; /* Larger font for mobile */
+    margin: 0.6rem auto; /* Center items with vertical spacing */
+    padding: 0.9rem 1.2rem; /* Reduced padding for easier tapping */
+    font-size: 1.1rem; /* Slightly smaller font for mobile */
     justify-content: flex-start; /* Align text and icon to the left */
-    border-radius: 0.3rem; /* Slightly less rounded */
+    border-radius: 0.3rem;
     box-shadow: none; /* Remove individual item shadows */
     transform: none; /* Remove individual item transforms */
   }
 
+  /* Reset or adjust specific mobile hover styles */
+  .navLink::before {
+      display: none; /* Hide animated background for mobile links */
+  }
+
+  .navLink:hover {
+      background-color: var(--button-hover-dark); /* Simple background change on hover */
+      color: var(--text-light); /* Keep text color consistent */
+  }
+
+  .navLink:hover .navIcon {
+      color: var(--text-light); /* Icon color matches text */
+  }
+
   .authButton {
-    background-color: var(--color-secondary); /* Keep original button color */
+    background-color: var(--color-secondary);
     color: var(--color-dark);
   }
 
@@ -244,21 +276,21 @@
     color: var(--color-primary);
   }
 
-  /* Specific adjustment for logout button text */
-  .logoutButton span { /* If you have text in a span inside logoutButton */
-    white-space: normal; /* Allow text to wrap if it's very long */
+  /* Specific adjustment for logout button text for wrapping */
+  .logoutButton span {
+    white-space: normal;
   }
 }
 
 @media (max-width: 480px) { /* Smaller mobile devices */
   .logo {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
   }
   .logoIcon {
-    font-size: 2rem;
+    font-size: 1.9rem;
   }
   .navLinks {
-    width: 220px; /* Slightly narrower menu for very small screens */
+    width: 190px; /* Even narrower menu for very small screens */
   }
   .navLink, .authButton, .logoutButton {
     font-size: 1rem;

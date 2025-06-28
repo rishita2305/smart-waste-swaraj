@@ -2,27 +2,29 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react'; // Import useState for the mobile menu toggle
+import { useState } from 'react';
+import { useRouter } from 'next/navigation'; // Import useRouter for redirection
 import { useData } from '../../contexts/DataContext';
 import {
-  FaBars,        // Hamburger icon
-  FaTimes,       // Close icon (X)
+  FaBars,
+  FaTimes,
   FaHome,
-  FaTachometerAlt, // Dashboard icon
-  FaMapMarkedAlt,  // Waste Map icon
-  FaPlusCircle,    // List Waste icon
-  FaBookOpen,      // Learn icon
-  FaSignInAlt,     // Login icon
-  FaUserPlus,      // Signup icon
-  FaSignOutAlt,    // Logout icon
-  FaUserCircle     // User profile icon
-} from 'react-icons/fa'; // Import React Icons
+  FaTachometerAlt,
+  FaMapMarkedAlt,
+  FaPlusCircle, // Add Waste icon
+  FaBookOpen,
+  FaSignInAlt,
+  FaUserPlus,
+  FaSignOutAlt,
+  FaUserCircle // User profile icon (if you want to use it later)
+} from 'react-icons/fa';
 
-import styles from './navbar.module.css'; // Import module CSS
+import styles from './navbar.module.css';
 
 export default function Navbar() {
   const { currentUser, logout } = useData();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State for mobile menu
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const router = useRouter(); // Initialize useRouter hook
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -37,19 +39,32 @@ export default function Navbar() {
     setIsMobileMenuOpen(false); // Close mobile menu on logout
   };
 
+  // Handle click on "Add Waste" link: redirect to login if not authenticated
+  const handleAddWasteClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!currentUser) {
+      e.preventDefault(); // Prevent default link behavior
+      // Redirect to login page, with a 'redirect' query parameter to return after login
+      router.push('/auth/login?redirect=/add-waste');
+      setIsMobileMenuOpen(false); // Close menu
+    } else {
+      handleNavLinkClick(); // If logged in, proceed and close mobile menu
+    }
+  };
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
+        {/* Logo and Site Title */}
         <Link href="/" className={styles.logo} onClick={handleNavLinkClick}>
           <span className={styles.logoIcon}>♻️</span> Smart Waste Swaraj
         </Link>
 
-        {/* Mobile Menu Toggle Button */}
+        {/* Mobile Menu Toggle Button (Hamburger/X icon) */}
         <div className={styles.menuToggle} onClick={toggleMobileMenu}>
           {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
         </div>
 
-        {/* Navigation Links - Conditional class for mobile view */}
+        {/* Navigation Links - Dynamically apply 'active' class for mobile */}
         <div className={`${styles.navLinks} ${isMobileMenuOpen ? styles.active : ''}`}>
           <Link href="/" className={styles.navLink} onClick={handleNavLinkClick}>
             <FaHome className={styles.navIcon} /> Home
@@ -60,21 +75,22 @@ export default function Navbar() {
           <Link href="/map" className={styles.navLink} onClick={handleNavLinkClick}>
             <FaMapMarkedAlt className={styles.navIcon} /> Waste Map
           </Link>
-          {currentUser?.userType === 'generator' && (
-            <Link href="/list-waste" className={styles.navLink} onClick={handleNavLinkClick}>
-              <FaPlusCircle className={styles.navIcon} /> List Waste
-            </Link>
-          )}
+          {/* "Add Waste" link: visible to all, but requires login for access */}
+          <Link href="/list-waste" className={styles.navLink} onClick={handleAddWasteClick}>
+            <FaPlusCircle className={styles.navIcon} /> Add Waste
+          </Link>
           <Link href="/learn" className={styles.navLink} onClick={handleNavLinkClick}>
             <FaBookOpen className={styles.navIcon} /> Learn
           </Link>
 
-          {/* Conditional rendering for Auth buttons */}
+          {/* Conditional rendering for Login/Signup or Logout button */}
           {currentUser ? (
+            // User is logged in
             <button onClick={handleLogout} className={`${styles.logoutButton} ${styles.navLink}`}>
               <FaSignOutAlt className={styles.navIcon} /> Logout ({currentUser.email.split('@')[0]})
             </button>
           ) : (
+            // User is not logged in
             <>
               <Link href="/auth/login" className={`${styles.authButton} ${styles.navLink}`} onClick={handleNavLinkClick}>
                 <FaSignInAlt className={styles.navIcon} /> Login

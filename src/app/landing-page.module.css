@@ -2,12 +2,12 @@
 
 /* --- Root Variables --- */
 :root {
-  --status-pending: #FFC107;   /* Orange/Yellow */
+  --status-pending: #FF7F50;   /* **UPDATED: Coral (was Yellow/Orange)** */
   --status-assigned: #2196F3;  /* Blue */
   --status-completed: #4CAF50; /* Green */
   --color-dark: #333; /* General dark text/element color */
   --color-primary: #4CAF50; /* Main green for actions */
-  --color-secondary: #FFC107; /* Yellow/Orange for highlights/accents */
+  --color-secondary: #FF7F50; /* **UPDATED: Coral (was Yellow/Orange for highlights/accents)** */
   --color-accent: #2196F3; /* Blue for interactive elements */
   --text-light: #f4f4f4; /* Light text color */
   --bg-light: #f8f9fa; /* Light background */
@@ -36,7 +36,7 @@
   background-repeat: no-repeat;
   color: white; /* Text color for content within hero */
   text-align: center;
-  padding: 150px 20px; /* Vertical padding */
+  padding: 80px 20px; /* UPDATED: Reduced padding-top to 80px */
   position: relative; /* For overlay and content positioning */
   min-height: 70vh; /* Minimum height for the hero section */
   display: flex;
@@ -61,6 +61,7 @@
   z-index: 2; /* Ensure content is above the overlay */
   max-width: 900px;
   margin: 0 auto;
+  /* Removed transform: translateY here as padding is adjusted */
 }
 
 /* Animated Hero Title (Text Shadow Animated) */
@@ -364,7 +365,7 @@
 .faqAnswerWrapper {
   max-height: 0; /* Initially hidden */
   overflow: hidden;
-  transition: max-height 0.2s ease-out, padding 0.2s ease-out; /* **UPDATED: Even faster transition (0.2s)** */
+  transition: max-height 0.2s ease-out, padding 0.2s ease-out; /* UPDATED: Even faster transition (0.2s) */
   padding: 0 25px; /* Horizontal padding */
 }
 
@@ -466,7 +467,7 @@
 /* --- Responsive Media Queries --- */
 @media (max-width: 1024px) {
   .heroSection {
-    padding: 120px 20px;
+    padding: 120px 20px; /* Keep responsive adjustments */
     min-height: 60vh;
   }
   .heroTitle {
@@ -509,7 +510,7 @@
 
 @media (max-width: 768px) {
   .heroSection {
-    padding: 100px 15px;
+    padding: 100px 15px; /* Keep responsive adjustments */
     min-height: 50vh;
   }
   .heroTitle {
@@ -569,7 +570,7 @@
 
 @media (max-width: 480px) {
   .heroSection {
-    padding: 80px 10px;
+    padding: 80px 10px; /* Keep responsive adjustments */
     min-height: 45vh;
   }
   .heroTitle {
@@ -617,7 +618,7 @@
     font-size: 13px;
   }
   .faqAnswerWrapper {
-    padding: 0 15px;
+    padding: 0.15px;
   }
   .faqAnswerWrapper.faqAnswerOpen {
     padding-bottom: 10px;

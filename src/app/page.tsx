@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 
 export default function LandingPage() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
-  const fullHeroTitle = "Smart Waste Swaraj"; // Define your hero title here
+  const fullHeroTitle = "Revolutionizing Waste Management for a Cleaner India"; // Define your hero title here
 
   const toggleFAQ = (index: number) => {
     setOpenFAQ(openFAQ === index ? null : index);
