@@ -36,23 +36,29 @@
 
 /* Hero Section with Background Image */
 .heroSection {
-  /* Background image with fallback gradient */
+  height: 100vh; /* Make it take full screen height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
   background: 
-    linear-gradient(135deg, rgba(89, 91, 94, 0.8)),
-    url('/pollution bg.jpg');
+    linear-gradient(135deg, rgba(89, 91, 94, 0.6), rgba(0, 0, 0, 0.4)),
+    url('/pollution bg.jpg'); /* your image path */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed; /* Parallax effect */
-  
+  background-attachment: fixed;
+
   color: white;
   text-align: center;
-  padding: 5rem 1rem;
   position: relative;
   overflow: hidden;
-  border-bottom-left-radius: 50px; /* Modern curve */
-  border-bottom-right-radius: 50px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  padding: 0 1rem; /* reduced padding since height is now full */
 }
+
 
 /* Alternative approach: Image overlay */
 .heroSection::before {
