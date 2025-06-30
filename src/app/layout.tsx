@@ -4,7 +4,9 @@ import Navbar from '../components/layout/Navbar';
 import { DataProvider } from '../contexts/DataContext';
 // Import the fonts you want to use
 import { Montserrat, Lato } from 'next/font/google';
-
+import { config } from '@fortawesome/fontawesome-svg-core';
+import '@fortawesome/fontawesome-svg-core/styles.css';
+config.autoAddCss = false;
 // Configure Montserrat font
 const montserrat = Montserrat({
   subsets: ['latin'],

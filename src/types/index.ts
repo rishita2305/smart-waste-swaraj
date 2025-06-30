@@ -8,6 +8,7 @@ export interface User {
   id: string;
   email: string;
   name?: string; // Display name for user
+  displayName?: string; // Often used for user-friendly names
   userType: 'generator' | 'collector';
   location?: { latitude: number; longitude: number };
 }
@@ -26,7 +27,13 @@ export interface Comment {
   userId: string;
   userName: string; // To display commenter's name
   text: string;
-  createdAt: number;
+  createdAt: string; // Changed to string to be consistent with parseISO from date-fns
+}
+
+// Define ContactInfo
+export interface ContactInfo {
+  phone?: string; // Optional phone number
+  email?: string; // Optional email address
 }
 
 export interface WasteListing {
@@ -39,8 +46,8 @@ export interface WasteListing {
   status: WasteStatus; // 'pending', 'assigned', 'completed'
   location: LocationData; // Detailed location of the item/waste
   assignedCollectorId?: string; // ID of the collector, if assigned
-  createdAt: number; // Unix timestamp
-  completedAt?: number; // Unix timestamp
+  createdAt: string; // Changed to string to be consistent with parseISO from date-fns
+  completedAt?: string; // Unix timestamp (Changed to string)
 
   // New fields for enhanced features:
   itemType: ItemType; // 'waste' or 'old_item'
@@ -48,23 +55,15 @@ export interface WasteListing {
   imageUrl?: string; // URL to the uploaded image of the waste/item
   price?: number; // For 'old_item' type, if selling (optional)
   comments?: Comment[]; // For buyer/collector comments/interest
+
+  // Crucially, add contactInfo to the main WasteListing interface
+  contactInfo?: ContactInfo;
 }
 
 // WasteListingLocation for map, includes all relevant data for display
-export interface WasteListingLocation {
-  id: string;
-  userId: string;
-  wasteType: string;
-  quantity: string;
-  unit?: string;
-  description?: string;
-  status: WasteStatus;
-  location: LocationData;
-  itemType: ItemType;
-  wasteCategory?: WasteCategory;
-  imageUrl?: string;
-  price?: number;
-  assignedCollectorId?: string;
-  createdAt: number;
-  comments?: Comment[];
+// This can extend WasteListing directly if it's meant to be a superset
+export interface WasteListingLocation extends WasteListing {
+  // No additional fields needed here if it's just a subset for the map.
+  // If it truly had unique fields ONLY for map markers, they'd go here.
+  // Otherwise, it can simply be an alias or extend WasteListing.
 }

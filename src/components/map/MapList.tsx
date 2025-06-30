@@ -1,61 +1,147 @@
-// src/components/map/ListingDetailPanel.tsx
-'use client';
+// src/components/map/MapList.tsx
 
-import React, { useState } from 'react'; // Added useState for comment input
-import { WasteListingLocation, User, Comment } from '../../types'; // Import types
-import { FaTimes, FaMapMarkerAlt, FaCalendarAlt, FaUser, FaTag, FaWeight, FaMoneyBillWave, FaPaperclip, FaCheckCircle, FaClipboardCheck, FaEnvelope, FaCommentDots, FaClock, FaTrash } from 'react-icons/fa';
+import React, { useState, useEffect, useCallback } from 'react';
+import { WasteListing, User, WasteStatus, Comment, ContactInfo } from '../../types';
 import styles from './waste-map.module.css';
-import { useData } from '../../contexts/DataContext'; // IMPORTANT: Import useData to get context functions
+import {
+  FaTimes,
+  FaMapMarkerAlt,
+  FaRulerCombined,
+  FaTag,
+  FaInfoCircle,
+  FaClock,
+  FaUser,
+  FaPhone,
+  FaEnvelope,
+  FaComment,
+  FaCalendarAlt,
+  FaCheckCircle,
+  FaTruck,
+  FaPencilAlt
+} from 'react-icons/fa';
+import { formatDistanceToNow, parseISO, isValid } from 'date-fns'; // Import `isValid`
 
 interface ListingDetailPanelProps {
-  listing: WasteListingLocation | null;
-  // currentUser is passed from parent to ensure it's loaded
+  listing: WasteListing | null;
   currentUser: User | null;
-  // users are passed to resolve display names
-  users: User[];
+  users: User[] | null;
   onClose: () => void;
+  onUpdateListingStatus: (
+    listingId: string,
+    newStatus: WasteStatus,
+    collectorId?: string | null,
+    commentText?: string
+  ) => Promise<void>;
 }
 
-export default function ListingDetailPanel({
+const ListingDetailPanel: React.FC<ListingDetailPanelProps> = ({
   listing,
   currentUser,
   users,
   onClose,
-}: ListingDetailPanelProps) {
-  // Retrieve the functions directly from the DataContext
-  const { assignCollectorToListing, completeListing, addCommentToListing } = useData();
+  onUpdateListingStatus,
+}) => {
+  // --- ALL HOOKS MUST BE DECLARED AT THE TOP LEVEL, UNCONDITIONALLY ---
   const [commentText, setCommentText] = useState('');
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+  const [showCommentInput, setShowCommentInput] = useState(false);
 
-  if (!listing) {
-    return null; // Don't render if no listing is selected
-  }
-
-  const isGenerator = currentUser?.userType === 'generator';
-  const isCollector = currentUser?.userType === 'collector';
-  const isAssignedToCurrentUser = listing.assignedCollectorId === currentUser?.id;
-  const isMyListing = currentUser?.id === listing.userId;
-
-  const getDisplayName = (userId: string) => {
-    const user = users.find(u => u.id === userId);
-    return user ? user.name || user.email.split('@')[0] : 'Unknown User';
-  };
-
-  const getCollectorName = (collectorId?: string) => {
-    if (!collectorId) return 'N/A';
-    const collector = users.find(u => u.id === collectorId);
-    return collector ? collector.name || collector.email.split('@')[0] : 'Unknown Collector';
-  };
-
-  const handleAddComment = async () => {
-    if (commentText.trim() && currentUser && listing) {
-      const newComment: Omit<Comment, 'id' | 'createdAt'> = {
-        userId: currentUser.id,
-        userName: currentUser.name || currentUser.email.split('@')[0],
-        text: commentText.trim(),
-      };
-      await addCommentToListing(listing.id, newComment);
-      setCommentText(''); // Clear comment input after adding
+  useEffect(() => {
+    if (listing) {
+      setCommentText('');
+      setShowCommentInput(false);
     }
+  }, [listing]);
+
+  // --- Move all useCallback hooks ABOVE the conditional return ---
+  const handleAssignToMe = useCallback(async () => {
+    if (!currentUser || !listing) return;
+
+    const confirmAssign = window.confirm("Are you sure you want to pick up/assign this item to yourself?");
+    if (confirmAssign) {
+      try {
+        await onUpdateListingStatus(
+          listing.id,
+          'assigned',
+          currentUser.id,
+          `Listing assigned to ${currentUser.displayName || currentUser.email || currentUser.name || 'a collector'}.`
+        );
+      } catch (error) {
+        console.error("Failed to assign listing:", error);
+        alert("Failed to assign listing. Please try again.");
+      }
+    }
+  }, [currentUser, listing, onUpdateListingStatus]);
+
+  const handleMarkAsCompleted = useCallback(async () => {
+    if (!listing) return;
+
+    const confirmComplete = window.confirm("Are you sure you want to mark this item as 'completed'? This action cannot be undone.");
+    if (confirmComplete) {
+      try {
+        await onUpdateListingStatus(
+          listing.id,
+          'completed',
+          null, // Clear assigned collector on completion (design choice)
+          `Listing marked as completed by ${currentUser?.displayName || currentUser?.email || currentUser?.name || 'the system'}.`
+        );
+      } catch (error) {
+        console.error("Failed to mark as completed:", error);
+        alert("Failed to mark as completed. Please try again.");
+      }
+    }
+  }, [listing, currentUser, onUpdateListingStatus]);
+
+  const handleAddComment = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!listing || !commentText.trim()) return;
+
+    setIsSubmittingComment(true);
+    try {
+      await onUpdateListingStatus(
+        listing.id,
+        listing.status,
+        listing.assignedCollectorId,
+        commentText
+      );
+      setCommentText('');
+      setShowCommentInput(false);
+    } catch (error) {
+      console.error("Failed to add comment:", error);
+      alert("Failed to add comment. Please try again.");
+    } finally {
+      setIsSubmittingComment(false);
+    }
+  }, [listing, commentText, onUpdateListingStatus]);
+
+
+  // --- CONDITIONAL RETURN AFTER ALL HOOKS ---
+  if (!listing) return null;
+
+  // Find the assigned collector's display name for display purposes
+  // This derivation logic can stay here as it doesn't involve Hooks
+  const assignedCollector = listing.assignedCollectorId
+    ? users?.find(user => user.id === listing.assignedCollectorId)
+    : null;
+
+  // Logic to determine if "Pick Up/Assign" button should be shown
+  const canAssign =
+    currentUser?.userType === 'collector' &&
+    listing.status === 'pending';
+
+  // Logic to determine if "Mark as Completed" button should be shown
+  const canComplete =
+    currentUser?.userType === 'collector' &&
+    listing.status === 'assigned' &&
+    listing.assignedCollectorId === currentUser.id;
+
+  // Show contact button if listing has contact info and it's not the current user's listing
+  const showContactLister = listing.contactInfo && currentUser?.id !== listing.userId;
+
+  // --- Helper function to safely format dates ---
+  const safeFormatDistanceToNow = (dateString: string) => {
+    const date = parseISO(dateString);
+    return isValid(date) ? formatDistanceToNow(date) : 'unknown time';
   };
 
   return (
@@ -64,144 +150,144 @@ export default function ListingDetailPanel({
         <button className={styles.closeButton} onClick={onClose}>
           <FaTimes />
         </button>
-        <h2 className={styles.detailPanelTitle}>{listing.itemType === 'waste' ? 'Waste Listing' : 'Old Item for Sale/Donate'}</h2>
+
+        <h2 className={styles.detailPanelTitle}>{listing.wasteType}</h2>
 
         {listing.imageUrl && (
           <div className={styles.detailPanelImageContainer}>
-            <img src={listing.imageUrl} alt={listing.wasteType} className={styles.detailPanelImage} onError={(e) => { e.currentTarget.src = 'https://placehold.co/400x300/e0e0e0/555555?text=No+Image'; }} />
+            <img src={listing.imageUrl} alt={listing.wasteType} className={styles.detailPanelImage} />
           </div>
         )}
 
         <div className={styles.detailSection}>
           <div className={styles.detailItem}>
-            <FaTag className={styles.detailIcon} />
-            <strong>Type:</strong> {listing.wasteType}
+            <FaInfoCircle className={styles.detailIcon} />
+            <strong>Description:</strong> <span>{listing.description || 'N/A'}</span>
           </div>
-          <div className={styles.detailItem}>
-            <FaWeight className={styles.detailIcon} />
-            <strong>Quantity:</strong> {listing.quantity} {listing.unit}
-          </div>
-          {listing.itemType === 'waste' && listing.wasteCategory && (
-            <div className={styles.detailItem}>
-              <FaTrash className={styles.detailIcon} />
-              <strong>Category:</strong> {listing.wasteCategory.replace(/_/g, ' ').toUpperCase()}
-            </div>
-          )}
-          {listing.price !== undefined && listing.itemType === 'old_item' && (
-            <div className={styles.detailItem}>
-              <FaMoneyBillWave className={styles.detailIcon} />
-              <strong>Price:</strong> {listing.price === 0 ? 'Donation' : `₹${listing.price.toFixed(2)}`}
-            </div>
-          )}
-          {listing.description && (
-            <div className={styles.detailItem}>
-              <FaPaperclip className={styles.detailIcon} />
-              <strong>Description:</strong> {listing.description}
-            </div>
-          )}
           <div className={styles.detailItem}>
             <FaMapMarkerAlt className={styles.detailIcon} />
-            <strong>Location:</strong> {listing.location.address || `Lat: ${listing.location.latitude.toFixed(4)}, Lng: ${listing.location.longitude.toFixed(4)}`}
+            <strong>Location:</strong> <span>{listing.location.address || listing.location.city || 'Unknown'}</span>
           </div>
           <div className={styles.detailItem}>
-            <FaCalendarAlt className={styles.detailIcon} />
-            <strong>Listed On:</strong> {new Date(listing.createdAt).toLocaleDateString()}
+            <FaRulerCombined className={styles.detailIcon} />
+            <strong>Quantity:</strong> <span>{listing.quantity} {listing.unit || ''}</span>
           </div>
-          <div className={styles.detailItem}>
-            <FaUser className={styles.detailIcon} />
-            <strong>Listed By:</strong> {getDisplayName(listing.userId)}
-          </div>
-          {listing.status !== 'pending' && (
+          {listing.itemType === 'old_item' && listing.price !== undefined && (
             <div className={styles.detailItem}>
-              <FaClipboardCheck className={styles.detailIcon} />
-              <strong>Assigned To:</strong> {getCollectorName(listing.assignedCollectorId)}
+              <FaTag className={styles.detailIcon} />
+              <strong>Price:</strong> <span>₹{listing.price}</span>
             </div>
           )}
           <div className={styles.detailItem}>
+            <FaClock className={styles.detailIcon} />
+            <strong>Listed:</strong> <span>{safeFormatDistanceToNow(listing.createdAt)} ago</span>
+          </div>
+          <div className={styles.detailItem}>
+            <FaClock className={styles.detailIcon} />
             <strong>Status:</strong>
-            <span className={`${styles.detailStatus} ${
-              listing.status === 'pending' ? styles.statusPending :
-              listing.status === 'assigned' ? styles.statusAssigned :
-              styles.statusCompleted
-            }`}>
-              {listing.status.charAt(0).toUpperCase() + listing.status.slice(1)}
+            <span className={`${styles.detailStatus} ${styles[`status${listing.status.charAt(0).toUpperCase() + listing.status.slice(1)}`]}`}>
+              {listing.status}
             </span>
           </div>
-        </div>
-
-        {/* Action Buttons (Conditional) */}
-        <div className={styles.detailActions}>
-          {isCollector && listing.status === 'pending' && listing.itemType === 'waste' && (
-            <button
-              onClick={() => currentUser && assignCollectorToListing(listing.id, currentUser.id)}
-              className={styles.actionButtonAssign}
-            >
-              <FaClipboardCheck className={styles.buttonIcon} /> Assign to me
-            </button>
-          )}
-
-          {isCollector && listing.status === 'assigned' && isAssignedToCurrentUser && (
-            <button
-              onClick={() => completeListing(listing.id)}
-              className={styles.actionButtonComplete}
-            >
-              <FaCheckCircle className={styles.buttonIcon} /> Mark Complete
-            </button>
-          )}
-
-          {/* Contact button for Old Items (if not your own listing) */}
-          {listing.itemType === 'old_item' && currentUser && !isMyListing && (
-            <button
-              onClick={() => alert(`Contacting ${getDisplayName(listing.userId)} about ${listing.wasteType} (Price: ₹${listing.price || 'N/A'}). (Simulated: Replace with chat/email integration)`)}
-              className={styles.actionButtonContactSeller}
-            >
-              <FaEnvelope className={styles.buttonIcon} /> Contact Seller
-            </button>
+          {listing.assignedCollectorId && (
+            <div className={styles.detailItem}>
+              <FaTruck className={styles.detailIcon} />
+              <strong>Assigned To:</strong> <span>{assignedCollector?.displayName || assignedCollector?.name || assignedCollector?.email || 'Unknown Collector'}</span>
+            </div>
           )}
         </div>
 
-        {/* Comments Section */}
         <div className={styles.commentsSection}>
-          <h3 className={styles.commentsTitle}>
-            <FaCommentDots className={styles.commentsIcon} /> Comments ({listing.comments?.length || 0})
+          <h3 className={styles.commentsTitle} onClick={() => setShowCommentInput(prev => !prev)}>
+            <FaComment className={styles.commentsIcon} /> Comments ({listing.comments?.length || 0})
+            <FaPencilAlt style={{ marginLeft: '10px', fontSize: '0.8em', cursor: 'pointer' }} />
           </h3>
           <div className={styles.commentList}>
             {listing.comments && listing.comments.length > 0 ? (
-              listing.comments.map(comment => (
-                <div key={comment.id} className={styles.commentItem}>
-                  <div className={styles.commentHeader}>
-                    <strong>{comment.userName}</strong>
-                    <span className={styles.commentTime}>
-                      <FaClock /> {new Date(comment.createdAt).toLocaleTimeString()} {new Date(comment.createdAt).toLocaleDateString()}
-                    </span>
+              // Filter and sort comments for display
+              [...listing.comments]
+                .filter(comment => {
+                  const commentDate = parseISO(comment.createdAt);
+                  return isValid(commentDate); // Only process valid dates
+                })
+                .sort((a, b) => parseISO(b.createdAt).getTime() - parseISO(a.createdAt).getTime())
+                .map((comment) => (
+                  <div key={comment.id} className={styles.commentItem}>
+                    <div className={styles.commentHeader}>
+                      <strong>{comment.userName}</strong>
+                      <span className={styles.commentTime}>
+                        <FaCalendarAlt /> {safeFormatDistanceToNow(comment.createdAt)} ago
+                      </span>
+                    </div>
+                    <p className={styles.commentText}>{comment.text}</p>
                   </div>
-                  <p className={styles.commentText}>{comment.text}</p>
-                </div>
-              ))
+                ))
             ) : (
               <p className={styles.noCommentsMessage}>No comments yet.</p>
             )}
           </div>
-          {currentUser && (
-            <div className={styles.addCommentForm}>
+          {showCommentInput && (
+            <form onSubmit={handleAddComment} className={styles.addCommentForm}>
               <textarea
                 className={styles.commentInput}
-                placeholder="Add a comment..."
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
-                rows={2}
+                placeholder="Add a comment..."
+                rows={3}
+                disabled={isSubmittingComment}
               ></textarea>
               <button
+                type="submit"
                 className={styles.addCommentButton}
-                onClick={handleAddComment}
-                disabled={!commentText.trim()}
+                disabled={!commentText.trim() || isSubmittingComment}
               >
-                Add Comment
+                {isSubmittingComment ? 'Adding...' : 'Add Comment'}
               </button>
-            </div>
+            </form>
+          )}
+        </div>
+
+        <div className={styles.detailActions}>
+          {canAssign && (
+            <button
+              className={styles.actionButtonAssign}
+              onClick={handleAssignToMe}
+              disabled={!currentUser}
+            >
+              <FaTruck /> Pick Up / Assign to Me
+            </button>
+          )}
+
+          {canComplete && (
+            <button
+              className={styles.actionButtonComplete}
+              onClick={handleMarkAsCompleted}
+              disabled={!currentUser}
+            >
+              <FaCheckCircle /> Mark as Completed
+            </button>
+          )}
+
+          {showContactLister && (
+            <button
+              className={styles.actionButtonContactSeller}
+              onClick={() => {
+                if (listing.contactInfo?.phone) {
+                  window.open(`tel:${listing.contactInfo.phone}`);
+                } else if (listing.contactInfo?.email) {
+                  window.open(`mailto:${listing.contactInfo.email}`);
+                } else {
+                  alert("No contact information available.");
+                }
+              }}
+            >
+              <FaUser /> Contact Lister
+            </button>
           )}
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default ListingDetailPanel;
