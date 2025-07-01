@@ -1,8 +1,9 @@
 // src/components/map/MapList.tsx
+// (This component is designed to be your ListingDetailPanel)
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { WasteListing, User, WasteStatus, Comment, ContactInfo } from '../../types';
-import styles from './waste-map.module.css';
+import React, { useState, useEffect, useCallback } from "react";
+import { WasteListingLocation, User, WasteStatus } from "../../types"; // Ensure types are correctly imported
+import styles from "./waste-map.module.css"; // Assuming this CSS module contains styles for the detail panel
 import {
   FaTimes,
   FaMapMarkerAlt,
@@ -17,20 +18,24 @@ import {
   FaCalendarAlt,
   FaCheckCircle,
   FaTruck,
-  FaPencilAlt
-} from 'react-icons/fa';
-import { formatDistanceToNow, parseISO, isValid } from 'date-fns'; // Import `isValid`
+  FaPlusCircle, // For adding a comment
+  FaPencilAlt, // For edit action (optional, but good for completeness)
+} from "react-icons/fa";
+import { formatDistanceToNow, parseISO, isValid } from "date-fns";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 
 interface ListingDetailPanelProps {
-  listing: WasteListing | null;
-  currentUser: User | null;
-  users: User[] | null;
+  listing: WasteListingLocation | null;
+  currentUser: User | null; // The currently logged-in user
+  users: User[] | null; // All users, to look up assigned collector's name
   onClose: () => void;
+  // Function to update the listing status and potentially add comments.
+  // It's expected to be provided by the parent (map/page.tsx) and interact with DataContext.
   onUpdateListingStatus: (
     listingId: string,
     newStatus: WasteStatus,
-    collectorId?: string | null,
-    commentText?: string
+    collectorId?: string | null, // Optional: for 'assigned' status
+    commentText?: string // Optional: for adding a new comment
   ) => Promise<void>;
 }
 
@@ -41,182 +46,276 @@ const ListingDetailPanel: React.FC<ListingDetailPanelProps> = ({
   onClose,
   onUpdateListingStatus,
 }) => {
-  // --- ALL HOOKS MUST BE DECLARED AT THE TOP LEVEL, UNCONDITIONALLY ---
-  const [commentText, setCommentText] = useState('');
+  const [commentText, setCommentText] = useState("");
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
-  const [showCommentInput, setShowCommentInput] = useState(false);
+  const [showCommentInput, setShowCommentInput] = useState(false); // To toggle comment input visibility
 
+  // Reset comment input and hide it when a new listing is selected or panel is opened/closed
   useEffect(() => {
     if (listing) {
-      setCommentText('');
+      setCommentText("");
       setShowCommentInput(false);
     }
   }, [listing]);
 
-  // --- Move all useCallback hooks ABOVE the conditional return ---
-  const handleAssignToMe = useCallback(async () => {
-    if (!currentUser || !listing) return;
+  // --- Helper function to safely format dates ---
+  const safeFormatDistanceToNow = (dateString: string | undefined | null) => {
+    if (!dateString || typeof dateString !== "string") return "unknown time";
+    const date = parseISO(dateString);
+    return isValid(date) ? formatDistanceToNow(date) : "unknown time";
+  };
 
-    const confirmAssign = window.confirm("Are you sure you want to pick up/assign this item to yourself?");
+  // Handler for assigning the listing to the current collector
+  const handleAssignToMe = useCallback(async () => {
+    if (!currentUser || !listing) return; // Ensure user and listing exist
+
+    // Confirm action with the user
+    const confirmAssign = window.confirm(
+      "Are you sure you want to pick up/assign this item to yourself?"
+    );
     if (confirmAssign) {
       try {
+        // Call the parent's update function to change status to 'assigned' and set collector ID
         await onUpdateListingStatus(
           listing.id,
-          'assigned',
-          currentUser.id,
-          `Listing assigned to ${currentUser.displayName || currentUser.email || currentUser.name || 'a collector'}.`
+          "assigned",
+          currentUser.id, // Assign current user's ID
+          `Listing assigned to ${currentUser.displayName || currentUser.email}.` // Auto-add comment
         );
+        // After successful update, you might want to provide feedback (e.g., a toast notification)
+        // The parent (MapPage) will re-render and close this panel if selectedListing becomes null.
       } catch (error) {
         console.error("Failed to assign listing:", error);
         alert("Failed to assign listing. Please try again.");
       }
     }
-  }, [currentUser, listing, onUpdateListingStatus]);
+  }, [currentUser, listing, onUpdateListingStatus]); // Dependencies for useCallback
 
+  // Handler for marking the listing as completed
   const handleMarkAsCompleted = useCallback(async () => {
-    if (!listing) return;
+    if (!listing) return; // Ensure listing exists
 
-    const confirmComplete = window.confirm("Are you sure you want to mark this item as 'completed'? This action cannot be undone.");
+    // Confirm action with the user
+    const confirmComplete = window.confirm(
+      "Are you sure you want to mark this item as 'completed'? This action cannot be undone."
+    );
     if (confirmComplete) {
       try {
+        // Call the parent's update function to change status to 'completed'
         await onUpdateListingStatus(
           listing.id,
-          'completed',
-          null, // Clear assigned collector on completion (design choice)
-          `Listing marked as completed by ${currentUser?.displayName || currentUser?.email || currentUser?.name || 'the system'}.`
+          "completed",
+          null, // Clear assigned collector if design requires this on completion
+          `Listing marked as completed by ${
+            currentUser?.displayName || currentUser?.email
+          }.` // Auto-add comment
         );
+        // Provide feedback
       } catch (error) {
         console.error("Failed to mark as completed:", error);
         alert("Failed to mark as completed. Please try again.");
       }
     }
-  }, [listing, currentUser, onUpdateListingStatus]);
+  }, [listing, currentUser, onUpdateListingStatus]); // Dependencies for useCallback
 
-  const handleAddComment = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!listing || !commentText.trim()) return;
+  // Handler for adding a new comment
+  const handleAddComment = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault(); // Prevent default form submission
+      if (!listing || !commentText.trim()) return; // Don't submit empty comments
 
-    setIsSubmittingComment(true);
-    try {
-      await onUpdateListingStatus(
-        listing.id,
-        listing.status,
-        listing.assignedCollectorId,
-        commentText
-      );
-      setCommentText('');
-      setShowCommentInput(false);
-    } catch (error) {
-      console.error("Failed to add comment:", error);
-      alert("Failed to add comment. Please try again.");
-    } finally {
-      setIsSubmittingComment(false);
-    }
-  }, [listing, commentText, onUpdateListingStatus]);
-
-
-  // --- CONDITIONAL RETURN AFTER ALL HOOKS ---
-  if (!listing) return null;
-
-  // Find the assigned collector's display name for display purposes
-  // This derivation logic can stay here as it doesn't involve Hooks
-  const assignedCollector = listing.assignedCollectorId
-    ? users?.find(user => user.id === listing.assignedCollectorId)
-    : null;
+      setIsSubmittingComment(true); // Set loading state for button
+      try {
+        // Use the general update function to add a comment without changing status
+        await onUpdateListingStatus(
+          listing.id,
+          listing.status, // Keep current status
+          listing.assignedCollectorId, // Keep current assigned collector
+          commentText // Pass the new comment text
+        );
+        setCommentText(""); // Clear comment input
+        setShowCommentInput(false); // Hide input after success
+      } catch (error) {
+        console.error("Failed to add comment:", error);
+        alert("Failed to add comment. Please try again.");
+      } finally {
+        setIsSubmittingComment(false); // Reset loading state
+      }
+    },
+    [listing, commentText, onUpdateListingStatus]
+  ); // Dependencies for useCallback
 
   // Logic to determine if "Pick Up/Assign" button should be shown
   const canAssign =
-    currentUser?.userType === 'collector' &&
-    listing.status === 'pending';
+    currentUser?.userType === "collector" && listing?.status === "pending";
 
   // Logic to determine if "Mark as Completed" button should be shown
   const canComplete =
-    currentUser?.userType === 'collector' &&
-    listing.status === 'assigned' &&
-    listing.assignedCollectorId === currentUser.id;
+    currentUser?.userType === "collector" &&
+    listing?.status === "assigned" &&
+    listing?.assignedCollectorId === currentUser.id;
 
-  // Show contact button if listing has contact info and it's not the current user's listing
-  const showContactLister = listing.contactInfo && currentUser?.id !== listing.userId;
+  // Logic to determine if the contact button should be shown (not for the lister themselves)
+  const showContactLister =
+    listing?.contactInfo && currentUser?.id !== listing?.userId;
 
-  // --- Helper function to safely format dates ---
-  const safeFormatDistanceToNow = (dateString: string) => {
-    const date = parseISO(dateString);
-    return isValid(date) ? formatDistanceToNow(date) : 'unknown time';
-  };
+  // Prepare contact info for display or button action
+  const contactDetails = [];
+  if (listing?.contactInfo?.phone) {
+    contactDetails.push({
+      icon: <FaPhone />,
+      text: listing.contactInfo.phone,
+      type: "phone",
+    });
+  }
+  if (listing?.contactInfo?.email) {
+    contactDetails.push({
+      icon: <FaEnvelope />,
+      text: listing.contactInfo.email,
+      type: "email",
+    });
+  }
+
+  // Find the assigned collector's display name for display purposes
+  const assignedCollector = listing?.assignedCollectorId
+    ? users?.find((user) => user.id === listing.assignedCollectorId)
+    : null;
+
+  // Now do the early return
+  if (!listing) return null;
 
   return (
     <div className={styles.detailPanelOverlay}>
       <div className={styles.detailPanel}>
-        <button className={styles.closeButton} onClick={onClose}>
+        {/* Close Button */}
+        <button
+          className={styles.closeButton}
+          onClick={onClose}
+          type="button"
+          aria-label="Close"
+        >
           <FaTimes />
         </button>
 
+        {/* Title */}
         <h2 className={styles.detailPanelTitle}>{listing.wasteType}</h2>
 
+        {/* Image */}
         {listing.imageUrl && (
           <div className={styles.detailPanelImageContainer}>
-            <img src={listing.imageUrl} alt={listing.wasteType} className={styles.detailPanelImage} />
+            <img
+              src={listing.imageUrl}
+              alt={listing.wasteType}
+              className={styles.detailPanelImage}
+            />
           </div>
         )}
 
+        {/* Details Section */}
         <div className={styles.detailSection}>
           <div className={styles.detailItem}>
             <FaInfoCircle className={styles.detailIcon} />
-            <strong>Description:</strong> <span>{listing.description || 'N/A'}</span>
+            <strong>Description:</strong>{" "}
+            <span>{listing.description || "N/A"}</span>
           </div>
           <div className={styles.detailItem}>
             <FaMapMarkerAlt className={styles.detailIcon} />
-            <strong>Location:</strong> <span>{listing.location.address || listing.location.city || 'Unknown'}</span>
+            <strong>Location:</strong>{" "}
+            <span>
+              {listing.location.address || listing.location.city || "Unknown"}
+            </span>
           </div>
           <div className={styles.detailItem}>
             <FaRulerCombined className={styles.detailIcon} />
-            <strong>Quantity:</strong> <span>{listing.quantity} {listing.unit || ''}</span>
+            <strong>Quantity:</strong>{" "}
+            <span>
+              {listing.quantity} {listing.unit}
+            </span>
           </div>
-          {listing.itemType === 'old_item' && listing.price !== undefined && (
-            <div className={styles.detailItem}>
-              <FaTag className={styles.detailIcon} />
-              <strong>Price:</strong> <span>₹{listing.price}</span>
-            </div>
-          )}
+          {listing.itemType === "old_item" &&
+            listing.price !== undefined && ( // Check for undefined price explicitly
+              <div className={styles.detailItem}>
+                <FaTag className={styles.detailIcon} />
+                <strong>Price:</strong> <span>₹{listing.price}</span>
+              </div>
+            )}
           <div className={styles.detailItem}>
             <FaClock className={styles.detailIcon} />
-            <strong>Listed:</strong> <span>{safeFormatDistanceToNow(listing.createdAt)} ago</span>
+            <strong>Listed:</strong>{" "}
+            <span>{safeFormatDistanceToNow(listing.createdAt)} ago</span>
           </div>
           <div className={styles.detailItem}>
             <FaClock className={styles.detailIcon} />
             <strong>Status:</strong>
-            <span className={`${styles.detailStatus} ${styles[`status${listing.status.charAt(0).toUpperCase() + listing.status.slice(1)}`]}`}>
+            <span
+              className={`${styles.detailStatus} ${
+                styles[
+                  `status${
+                    listing.status.charAt(0).toUpperCase() +
+                    listing.status.slice(1)
+                  }`
+                ]
+              }`}
+            >
               {listing.status}
             </span>
           </div>
           {listing.assignedCollectorId && (
             <div className={styles.detailItem}>
               <FaTruck className={styles.detailIcon} />
-              <strong>Assigned To:</strong> <span>{assignedCollector?.displayName || assignedCollector?.name || assignedCollector?.email || 'Unknown Collector'}</span>
+              <strong>Assigned To:</strong>{" "}
+              <span>
+                {assignedCollector?.displayName ||
+                  assignedCollector?.email ||
+                  "Unknown Collector"}
+              </span>
             </div>
           )}
         </div>
 
+        {/* Comments Section */}
         <div className={styles.commentsSection}>
-          <h3 className={styles.commentsTitle} onClick={() => setShowCommentInput(prev => !prev)}>
-            <FaComment className={styles.commentsIcon} /> Comments ({listing.comments?.length || 0})
-            <FaPencilAlt style={{ marginLeft: '10px', fontSize: '0.8em', cursor: 'pointer' }} />
+          <h3
+            className={styles.commentsTitle}
+            onClick={() => setShowCommentInput((prev) => !prev)}
+          >
+            <FaComment className={styles.commentsIcon} /> Comments (
+            {listing.comments?.length || 0})
+            <FaPencilAlt
+              style={{
+                marginLeft: "10px",
+                fontSize: "0.8em",
+                cursor: "pointer",
+              }}
+            />
           </h3>
           <div className={styles.commentList}>
             {listing.comments && listing.comments.length > 0 ? (
-              // Filter and sort comments for display
               [...listing.comments]
-                .filter(comment => {
+                .filter((comment) => {
+                  if (
+                    !comment.createdAt ||
+                    typeof comment.createdAt !== "string"
+                  )
+                    return false;
                   const commentDate = parseISO(comment.createdAt);
-                  return isValid(commentDate); // Only process valid dates
+                  return isValid(commentDate);
                 })
-                .sort((a, b) => parseISO(b.createdAt).getTime() - parseISO(a.createdAt).getTime())
+                .sort(
+                  (a, b) =>
+                    parseISO(b.createdAt).getTime() -
+                    parseISO(a.createdAt).getTime()
+                )
                 .map((comment) => (
-                  <div key={comment.id} className={styles.commentItem}>
+                  <div
+                    key={comment.id || comment.createdAt}
+                    className={styles.commentItem}
+                  >
                     <div className={styles.commentHeader}>
                       <strong>{comment.userName}</strong>
                       <span className={styles.commentTime}>
-                        <FaCalendarAlt /> {safeFormatDistanceToNow(comment.createdAt)} ago
+                        <FaCalendarAlt />{" "}
+                        {safeFormatDistanceToNow(comment.createdAt)} ago
                       </span>
                     </div>
                     <p className={styles.commentText}>{comment.text}</p>
@@ -241,12 +340,13 @@ const ListingDetailPanel: React.FC<ListingDetailPanelProps> = ({
                 className={styles.addCommentButton}
                 disabled={!commentText.trim() || isSubmittingComment}
               >
-                {isSubmittingComment ? 'Adding...' : 'Add Comment'}
+                {isSubmittingComment ? "Adding..." : "Add Comment"}
               </button>
             </form>
           )}
         </div>
 
+        {/* Action Buttons */}
         <div className={styles.detailActions}>
           {canAssign && (
             <button
@@ -257,7 +357,6 @@ const ListingDetailPanel: React.FC<ListingDetailPanelProps> = ({
               <FaTruck /> Pick Up / Assign to Me
             </button>
           )}
-
           {canComplete && (
             <button
               className={styles.actionButtonComplete}
@@ -267,7 +366,6 @@ const ListingDetailPanel: React.FC<ListingDetailPanelProps> = ({
               <FaCheckCircle /> Mark as Completed
             </button>
           )}
-
           {showContactLister && (
             <button
               className={styles.actionButtonContactSeller}
