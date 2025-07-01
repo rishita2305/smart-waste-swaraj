@@ -1,25 +1,5 @@
 /* src/components/map/waste-map.module.css */
 
-/* --- Root Variables (assuming these are in your globals.css or can be defined here) --- */
-/*
-If you don't have these in your global CSS, you can uncomment them here.
-It's generally better to define them once in globals.css or a dedicated theme file.
-*/
-:root {
-  --status-pending: #ffc107; /* Orange/Yellow */
-  --status-assigned: #2196f3; /* Blue */
-  --status-completed: #4caf50; /* Green */
-  --color-dark: #333; /* General dark text/element color */
-  --color-primary: #4caf50; /* Main green for actions */
-  --color-secondary: #ffc107; /* Yellow/Orange for highlights */
-  --color-accent: #2196f3; /* Blue for interactive elements */
-  --text-light: #f4f4f4; /* Light text color */
-  --bg-light: #f8f9fa; /* Light background */
-  --color-danger: #dc3545; /* Red for errors/removals */
-  --color-text-muted: #6c757d; /* Muted text color */
-  --color-text-body: #495057; /* Body text color */
-}
-
 /* --- Map Container Styling (used by WasteMap.tsx) --- */
 .mapContainer {
   height: 100%; /* Take full height of its parent (.mapWrapper in map/page.module.css) */
