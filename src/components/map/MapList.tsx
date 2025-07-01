@@ -58,6 +58,25 @@ const ListingDetailPanel: React.FC<ListingDetailPanelProps> = ({
     }
   }, [listing]);
 
+  // Handle Escape key to close panel
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    // Add event listener when panel is open
+    if (listing) {
+      document.addEventListener("keydown", handleKeyDown);
+    }
+
+    // Cleanup event listener
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [listing, onClose]);
+
   // --- Helper function to safely format dates ---
   const safeFormatDistanceToNow = (dateString: string | undefined | null) => {
     if (!dateString || typeof dateString !== "string") return "unknown time";
@@ -185,12 +204,21 @@ const ListingDetailPanel: React.FC<ListingDetailPanelProps> = ({
   if (!listing) return null;
 
   return (
-    <div className={styles.detailPanelOverlay}>
-      <div className={styles.detailPanel}>
+    <div 
+      className={styles.detailPanelOverlay}
+      onClick={onClose} // Close when clicking on overlay
+    >
+      <div 
+        className={styles.detailPanel}
+        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside panel
+      >
         {/* Close Button */}
         <button
           className={styles.closeButton}
-          onClick={onClose}
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            onClose();
+          }}
           type="button"
           aria-label="Close"
         >

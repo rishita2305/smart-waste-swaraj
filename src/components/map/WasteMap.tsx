@@ -83,7 +83,7 @@ export default function MapClient({
       zoom={13}
       scrollWheelZoom
       className={styles.mapComponent}
-      style={{ height: "400px", width: "100%" }} // Ensure height and width are set
+      style={{ height: "100%", width: "100%" }}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
