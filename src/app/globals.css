@@ -1,8 +1,10 @@
+@import "leaflet/dist/leaflet.css";
+
 /* src/app/globals.css (or a dedicated CSS file if you structure it that way) */
 
 :root {
   /* Basic Colors */
-  --color-primary: #4CAF50; /* Green */
+  --color-primary: #4caf50; /* Green */
   --color-primary-dark: #45a049;
   --color-secondary: #007bff; /* Blue */
   --color-secondary-dark: #0056b3;
@@ -27,10 +29,9 @@
   --color-success: #28a745;
 }
 
-
 /* General Body and Container Styles */
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   margin: 0;
   padding: 0;
   background-color: var(--color-light);
@@ -196,8 +197,12 @@ body {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .mr-2 {
