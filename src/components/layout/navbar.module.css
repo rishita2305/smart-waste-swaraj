@@ -1,20 +1,5 @@
 /* src/components/layout/navbar.module.css */
 
-/* --- Root Variables (Add these to your globals.css if they aren't already there for consistency) --- */
-/*
-:root {
-  --color-primary: #3f51b5;     // A professional deep blue
-  --color-secondary: #ffeb3b;   // A bright, contrasting yellow
-  --color-accent: #00bcd4;      // A vibrant teal for highlights
-  --color-dark: #212121;        // Dark shade for text/icons
-  --text-light: #ffffff;        // Pure white for text on dark backgrounds
-  --button-hover-dark: #303f9f; // Darker primary for button hover effect
-  --shadow-light: rgba(0, 0, 0, 0.1);
-  --shadow-medium: rgba(0, 0, 0, 0.2);
-  --shadow-strong: rgba(0, 0, 0, 0.3);
-}
-*/
-
 /* --- Base Navbar Styling --- */
 .navbar {
   background-color: var(--color-primary);
@@ -22,8 +7,8 @@
   color: var(--text-light);
   box-shadow: 0 4px 12px var(--shadow-medium); /* Refined shadow for a sleeker look */
   position: sticky; /* Makes the navbar stick to the top */
-  top: 0;           /* Sticks it at the very top */
-  z-index: 1000;    /* Ensures it's above other content when scrolling */
+  top: 0; /* Sticks it at the very top */
+  z-index: 1000; /* Ensures it's above other content when scrolling */
   transition: all 0.3s ease-in-out; /* Smooth transitions for any property changes */
 }
 
@@ -95,7 +80,7 @@
 
 /* Custom animated background slide for nav links on hover */
 .navLink::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%; /* Starts off-screen to the left */
@@ -163,7 +148,6 @@
   box-shadow: 0 4px 8px var(--shadow-medium);
 }
 
-
 /* --- Mobile Menu Toggle (Hamburger/X icon) --- */
 .menuToggle {
   display: none; /* Hidden on desktop */
@@ -178,9 +162,9 @@
   transform: scale(1.1); /* Subtle zoom effect */
 }
 
-
 /* --- Mobile Responsiveness --- */
-@media (max-width: 992px) { /* Adjust breakpoint for larger tablets/smaller laptops */
+@media (max-width: 992px) {
+  /* Adjust breakpoint for larger tablets/smaller laptops */
   .container {
     padding: 0 1rem;
     min-height: 50px; /* Even smaller height */
@@ -194,13 +178,16 @@
   .navLinks {
     gap: 1.5rem;
   }
-  .navLink, .authButton, .logoutButton {
+  .navLink,
+  .authButton,
+  .logoutButton {
     font-size: 0.95rem;
     padding: 0.4rem 0.8rem;
   }
 }
 
-@media (max-width: 768px) { /* Standard mobile breakpoint */
+@media (max-width: 768px) {
+  /* Standard mobile breakpoint */
   .menuToggle {
     display: block; /* Show hamburger/X icon */
   }
@@ -231,7 +218,9 @@
     pointer-events: auto; /* Enable interaction when active */
   }
 
-  .navLink, .authButton, .logoutButton {
+  .navLink,
+  .authButton,
+  .logoutButton {
     width: 90%; /* Almost full width of the menu */
     margin: 0.6rem auto; /* Center items with vertical spacing */
     padding: 0.9rem 1.2rem; /* Reduced padding for easier tapping */
@@ -244,16 +233,18 @@
 
   /* Reset or adjust specific mobile hover styles */
   .navLink::before {
-      display: none; /* Hide animated background for mobile links */
+    display: none; /* Hide animated background for mobile links */
   }
 
   .navLink:hover {
-      background-color: var(--button-hover-dark); /* Simple background change on hover */
-      color: var(--text-light); /* Keep text color consistent */
+    background-color: var(
+      --button-hover-dark
+    ); /* Simple background change on hover */
+    color: var(--text-light); /* Keep text color consistent */
   }
 
   .navLink:hover .navIcon {
-      color: var(--text-light); /* Icon color matches text */
+    color: var(--text-light); /* Icon color matches text */
   }
 
   .authButton {
@@ -282,7 +273,8 @@
   }
 }
 
-@media (max-width: 480px) { /* Smaller mobile devices */
+@media (max-width: 480px) {
+  /* Smaller mobile devices */
   .logo {
     font-size: 1.4rem;
   }
@@ -292,7 +284,9 @@
   .navLinks {
     width: 190px; /* Even narrower menu for very small screens */
   }
-  .navLink, .authButton, .logoutButton {
+  .navLink,
+  .authButton,
+  .logoutButton {
     font-size: 1rem;
     padding: 0.8rem 1rem;
   }

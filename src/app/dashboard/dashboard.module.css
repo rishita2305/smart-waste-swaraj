@@ -1,26 +1,6 @@
 /* src/app/dashboard/dashboard.module.css */
 
-/* Define CSS Variables if not in globals.css (for standalone testing) */
-:root {
-  --color-primary: #4CAF50;
-  --color-secondary: #FFC107;
-  --color-accent: #2196F3;
-  --color-dark: #333;
-  --color-light: #f8f9fa;
-  --color-text-body: #495057;
-  --color-text-muted: #6c757d;
-
-  --status-pending: #FFC107;
-  --status-assigned: #2196F3;
-  --status-completed: #4CAF50;
-
-  --card-blue-bg: #e0f2f7; /* Light blue */
-  --card-blue-text: #01579b;
-  --card-orange-bg: #fff8e1; /* Light orange */
-  --card-orange-text: #ff6f00;
-  --card-green-bg: #e8f5e9; /* Light green */
-  --card-green-text: #2e7d32;
-}
+/* Removed :root block. Use variables from globals.css instead. */
 
 .dashboardContainer {
   max-width: 1200px;
@@ -38,7 +18,7 @@
   color: var(--color-primary);
   margin-bottom: 2.5rem;
   font-weight: 700;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .statsGrid {
@@ -186,7 +166,7 @@
   height: auto;
   border-radius: 8px;
   margin-top: 1rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .listingActions {
@@ -197,7 +177,10 @@
   justify-content: flex-end; /* Align buttons to the right */
 }
 
-.viewMapButton, .actionButtonAssign, .actionButtonComplete, .actionButtonContact {
+.viewMapButton,
+.actionButtonAssign,
+.actionButtonComplete,
+.actionButtonContact {
   padding: 0.6rem 1.2rem;
   border-radius: 20px;
   border: none;
@@ -217,7 +200,7 @@
 .viewMapButton:hover {
   background-color: color-mix(in srgb, var(--color-accent) 80%, black);
   transform: translateY(-2px);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
 .collectorActions {
@@ -234,7 +217,7 @@
 .actionButtonAssign:hover {
   background-color: color-mix(in srgb, var(--color-primary) 80%, black);
   transform: translateY(-2px);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
 .actionButtonComplete {
@@ -244,7 +227,7 @@
 .actionButtonComplete:hover {
   background-color: color-mix(in srgb, var(--status-completed) 80%, black);
   transform: translateY(-2px);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
 .actionButtonContact {
@@ -254,7 +237,7 @@
 .actionButtonContact:hover {
   background-color: color-mix(in srgb, var(--color-secondary) 80%, black);
   transform: translateY(-2px);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
 .noListingsMessage {
@@ -283,17 +266,18 @@
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .listWasteButton:hover {
   background-color: color-mix(in srgb, var(--color-primary) 80%, black);
   transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* --- New Loading & Unauthorized Containers --- */
-.loadingContainer, .unauthorizedContainer {
+.loadingContainer,
+.unauthorizedContainer {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -344,14 +328,17 @@
 .loginRedirectButton:hover {
   background-color: color-mix(in srgb, var(--color-accent) 80%, black);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
 
 /* Animations */
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive adjustments */
@@ -390,10 +377,14 @@
   .listingTitle {
     font-size: 1.1rem;
   }
-  .listingDetail, .listingDescription {
+  .listingDetail,
+  .listingDescription {
     font-size: 0.85rem;
   }
-  .viewMapButton, .actionButtonAssign, .actionButtonComplete, .actionButtonContact {
+  .viewMapButton,
+  .actionButtonAssign,
+  .actionButtonComplete,
+  .actionButtonContact {
     padding: 0.5rem 0.8rem;
     font-size: 0.8rem;
   }
@@ -401,7 +392,8 @@
     padding: 0.8rem 1.5rem;
     font-size: 1rem;
   }
-  .loadingContainer, .unauthorizedContainer {
+  .loadingContainer,
+  .unauthorizedContainer {
     font-size: 1rem;
   }
   .loadingSpinner {

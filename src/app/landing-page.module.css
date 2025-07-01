@@ -1,25 +1,5 @@
 /* src/app/landing-page.module.css */
 
-/* --- Root Variables --- */
-:root {
-  --status-pending: #FF7F50;   /* **UPDATED: Coral (was Yellow/Orange)** */
-  --status-assigned: #2196F3;  /* Blue */
-  --status-completed: #4CAF50; /* Green */
-  --color-dark: #333; /* General dark text/element color */
-  --color-primary: #4CAF50; /* Main green for actions */
-  --color-secondary: #FF7F50; /* **UPDATED: Coral (was Yellow/Orange for highlights/accents)** */
-  --color-accent: #2196F3; /* Blue for interactive elements */
-  --text-light: #f4f4f4; /* Light text color */
-  --bg-light: #f8f9fa; /* Light background */
-  --color-danger: #dc3545; /* Red for errors/removals */
-  --color-text-muted: #6c757d; /* Muted text color */
-  --color-text-body: #495057; /* Body text color */
-
-  /* Optional: Define fonts if not using next/font directly in layout.tsx */
-  --font-heading: 'Montserrat', sans-serif;
-  --font-body: 'Lato', sans-serif;
-}
-
 /* --- General Container for the entire landing page --- */
 .landingPageContainer {
   display: flex;
@@ -30,7 +10,7 @@
 
 /* --- Hero Section Styling --- */
 .heroSection {
-  background-image: url('/waste-hero-bg.jpg'); /* Your waste-related background image */
+  background-image: url("/waste-hero-bg.jpg"); /* Your waste-related background image */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -46,13 +26,18 @@
 }
 
 .heroOverlay {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.4); /* Lighter overlay (40% opacity) to show more background */
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.4
+  ); /* Lighter overlay (40% opacity) to show more background */
   z-index: 1; /* Place overlay above background image */
 }
 
@@ -73,17 +58,18 @@
   line-height: 1.2;
   color: white; /* Ensure text is white */
   /* Stronger initial text shadow for readability */
-  text-shadow: 2px 2px 8px rgba(0,0,0,0.9), 4px 4px 12px rgba(0,0,0,0.7);
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9), 4px 4px 12px rgba(0, 0, 0, 0.7);
   animation: pulseShadow 2s infinite alternate ease-in-out; /* Apply the new shadow animation */
 }
 
 /* Keyframes for the Pulse Shadow animation */
 @keyframes pulseShadow {
   from {
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.9), 4px 4px 12px rgba(0,0,0,0.7);
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9), 4px 4px 12px rgba(0, 0, 0, 0.7);
   }
   to {
-    text-shadow: 3px 3px 12px rgba(0,0,0,1), 6px 6px 18px rgba(0,0,0,0.9), 0 0 20px rgba(255,255,255,0.2); /* A subtle glow and expansion */
+    text-shadow: 3px 3px 12px rgba(0, 0, 0, 1), 6px 6px 18px rgba(0, 0, 0, 0.9),
+      0 0 20px rgba(255, 255, 255, 0.2); /* A subtle glow and expansion */
   }
 }
 
@@ -94,7 +80,7 @@
   line-height: 1.5; /* Improved line height */
   color: white; /* Ensure text is white */
   /* Clear text shadow for readability */
-  text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
 }
 
 /* --- General Content Section Styling (for reusable components like .container, .sectionTitle) --- */
@@ -116,7 +102,7 @@
 }
 
 .sectionTitle::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -147,7 +133,7 @@
   max-width: 500px; /* Max width to prevent image from being too large */
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15); /* Keep box shadow on images/cards */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Keep box shadow on images/cards */
 }
 
 .aboutImage {
@@ -175,8 +161,11 @@
   margin-bottom: 20px;
 }
 
-.getStartedButton, .exploreMapButton {
-  background-color: var(--color-primary); /* Use primary color for main buttons */
+.getStartedButton,
+.exploreMapButton {
+  background-color: var(
+    --color-primary
+  ); /* Use primary color for main buttons */
   color: white;
   padding: 18px 35px;
   border-radius: 50px; /* Pill shape */
@@ -190,7 +179,8 @@
   box-shadow: 0 5px 15px rgba(var(--color-primary), 0.4); /* Keep button shadows */
 }
 
-.getStartedButton:hover, .exploreMapButton:hover {
+.getStartedButton:hover,
+.exploreMapButton:hover {
   background-color: color-mix(in srgb, var(--color-primary) 85%, black);
   transform: translateY(-5px) scale(1.02);
   box-shadow: 0 8px 20px rgba(var(--color-primary), 0.5);
@@ -200,7 +190,8 @@
   font-size: 1.3em;
 }
 
-.exploreMapButton { /* Specific override if needed for map button */
+.exploreMapButton {
+  /* Specific override if needed for map button */
   background-color: var(--color-accent); /* Use accent color for map button */
   box-shadow: 0 3px 10px rgba(var(--color-accent), 0.3);
 }
@@ -209,7 +200,6 @@
   background-color: color-mix(in srgb, var(--color-accent) 85%, black);
   box-shadow: 0 5px 12px rgba(var(--color-accent), 0.4);
 }
-
 
 /* --- Benefits Section --- */
 .benefitsSection {
@@ -273,13 +263,15 @@
   font-weight: 700;
   text-align: center;
   margin-bottom: 50px; /* Consistent margin-bottom */
-  color: var(--color-dark); /* Using general dark color, or specify green if desired: #4CAF50 */
+  color: var(
+    --color-dark
+  ); /* Using general dark color, or specify green if desired: #4CAF50 */
   position: relative;
   padding-bottom: 15px;
 }
 
 .faqSectionTitle::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -303,12 +295,18 @@
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden; /* CRUCIAL for smooth max-height animation */
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Consistent box shadow */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Consistent box shadow */
 }
 
-.faqItemActive { /* Class added by JS when FAQ is open */
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  background-color: rgba(103, 173, 91, 0.08); /* Light green tint for active item */
+.faqItemActive {
+  /* Class added by JS when FAQ is open */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background-color: rgba(
+    103,
+    173,
+    91,
+    0.08
+  ); /* Light green tint for active item */
 }
 
 .faqQuestion {
@@ -385,7 +383,6 @@
 .faqAnswer p {
   margin: 0; /* Remove default paragraph margin */
 }
-
 
 /* --- Footer Styling --- */
 .footer {
@@ -604,7 +601,8 @@
     flex-direction: column;
     text-align: center;
   }
-  .aboutImageWrapper, .aboutText {
+  .aboutImageWrapper,
+  .aboutText {
     min-width: unset;
     width: 100%;
   }
@@ -626,7 +624,7 @@
   .faqAnswer {
     font-size: 0.95em;
   }
-  
+
   /* Footer Responsive */
   .footerContainer {
     grid-template-columns: repeat(2, 1fr);
@@ -672,7 +670,11 @@
 
   /* FAQ Responsive */
   .faqSectionTitle {
-    font-size: clamp(1.6em, 5vw, 2.5em); /* Consistent with other section titles */
+    font-size: clamp(
+      1.6em,
+      5vw,
+      2.5em
+    ); /* Consistent with other section titles */
   }
   .faqQuestion {
     font-size: 1em;
@@ -692,7 +694,7 @@
   .faqAnswer {
     font-size: 0.9em;
   }
-  
+
   /* Footer Responsive */
   .footerContainer {
     grid-template-columns: repeat(2, 1fr);
