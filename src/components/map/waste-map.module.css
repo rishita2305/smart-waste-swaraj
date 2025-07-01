@@ -24,8 +24,12 @@ It's generally better to define them once in globals.css or a dedicated theme fi
 .mapContainer {
   height: 100%; /* Take full height of its parent (.mapWrapper in map/page.module.css) */
   width: 100%;
-  min-height: 400px; /* Ensures a minimum visible area */
-  /* border-radius and box-shadow are now handled by .mapWrapper in map/page.module.css */
+}
+
+/* --- Leaflet MapContainer Styling --- */
+.mapComponent {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 /* --- Custom Marker Icon Styling --- */

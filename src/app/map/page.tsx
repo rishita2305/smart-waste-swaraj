@@ -252,8 +252,12 @@ export default function MapPage() {
         setLoadingMapData(false); // DataContext has finished loading
       }
     }
+  }, [currentUser, dataContextLoading, router]);
 
+  // Separate useEffect to handle initial focus listing from URL (only once)
+  useEffect(() => {
     // Set selectedListing if initialFocusListingId is present and listings are loaded
+    // Only do this if we haven't already set a selected listing
     if (initialFocusListingId && wasteListings && !selectedListing) {
       const listingToFocus = wasteListings.find(
         (l) => l.id === initialFocusListingId
@@ -261,15 +265,10 @@ export default function MapPage() {
       if (listingToFocus) {
         setSelectedListing(listingToFocus);
       }
+      // Clear the initialFocusListingId to prevent re-triggering
+      setInitialFocusListingId(null);
     }
-  }, [
-    currentUser,
-    dataContextLoading,
-    router,
-    initialFocusListingId,
-    wasteListings,
-    selectedListing,
-  ]);
+  }, [initialFocusListingId, wasteListings]); // Remove selectedListing from dependencies
 
   // Filter and search logic (now directly on ⁠ wasteListings ⁠ from DataContext)
   const filteredLocations = useMemo(() => {
